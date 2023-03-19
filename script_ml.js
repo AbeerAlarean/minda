@@ -640,7 +640,7 @@ async function uploadFile(file, fName) {
     submitButton.innerText = "Submit"
 
     setTimeout(function () {
-      location.replace("/")
+      location.replace("./")
     }, 1000);
   } catch (error) {
     alert('Gagal memuat naik rakaman anda.\nSila pastikan anda mempunyai internet yang stabil dan muat naik rakaman semula.')
