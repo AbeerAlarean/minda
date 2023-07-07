@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <script src="https://apis.google.com/js/api.js"></script>
     <title>Voice For health</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,7 +19,7 @@
       rel="stylesheet"
       type="text/css"
     />
-    <link rel="stylesheet" href="ml/manage-audio.css" />
+    <link rel="stylesheet" href="en/manage-audio-en.css" />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
@@ -28,7 +31,7 @@
       rel="stylesheet"
       media="screen"
     />
-    <script src="ml/flag.js"></script>
+    <script src="en/flag.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/intlTelInput.js"></script>
   </head>
@@ -36,82 +39,114 @@
   <body onload="fnBrowserDetect()">
     <h1></h1>
     <div id="MAIN">
-      <h1>VHS SISTEM RAKAMAN</h1>
+      <!--<h1>Voice for Health</h1>-->
+      <div class="logo-container">
+        <a href="index.html">
+          <img
+            class="logo"
+            src="./assets/green-576w.png"
+            alt="Voice For Health Logo"
+          />
+        </a>
+      </div>
       <p class="lead">
-        Meneroka kesihatan fizikal dan mental melalui bunyi<br />Mencegah lebih
-        baik daripada mengubati…
+        Temui kesihatan dalaman dan selebihnya dengan suara anda. <br />
+        Pencegahan lebih baik daripada penawar.
       </p>
 
-      <div class="recorder-instructions">
+      <div id="recorder-instructions" class="recorder-instructions">
         <p1>Arahan</p1>
-        <div class="step-1A">
-          <h2>Langkah 1 &#45; Cari ruang yang sunyi</h2>
-          <p>
-            - Pastikan anda mematikan kipas/aircond, jika tidak, ia akan
-            menjejaskan keputusan ujian.
-          </p>
-          <p>- Letakkan telefon anda pada mod senyap.</p>
+        <div class="text-container">
+          <div class="short-version">
+            <div class="step-1A">
+              <p>Langkah 1 - Cari Ruang Sunyi</p>
+            </div>
+            <div class="step-2A">
+              <p>Langkah 2 - Persediaan Sebelum Rakaman</p>
+            </div>
+            <div class="step-2A">
+              <p>Langkah 3 - Klik "Mula Rakaman"</p>
+            </div>
+
+            <div class="step-3A">
+              <p>Langkah 4 - Klik "Hentikan/ Ulang Rakaman"</p>
+            </div>
+
+            <div class="step-4A">
+              <p>Langkah 5 - Isi Profil Peribadi</p>
+            </div>
+            <div class="step-6A">
+              <p>Langkah 6 - Klik "Muat Naik Rakaman"</p>
+            </div>
+          </div>
         </div>
 
-        <div class="step-2A">
-          <h2>Langkah 2 &#45; Pra-rakaman</h2>
-          <p>
-            - Sila gunakan mikrofon telefon untuk merakam, jangan gunakan fon
-            telinga!!!
-          </p>
-          <p>
-            - Hanya klik "Mulakan Rakaman" apabila anda mempunyai rangkaian
-            internet yang stabil.
-          </p>
+        <div class="full-version hidden">
+          <div class="step-1A">
+            <h4>Langkah 1 - Cari Ruang Sunyi</h4>
+            <p>
+              - Pastikan untuk mematikan kipas/ penyejuk udara, jika tidak, ia
+              akan mempengaruhi keputusan ujian. Letakkan telefon anda dalam
+              mode senyap.
+            </p>
+            <p>- Put your phone on silent mode.</p>
+          </div>
+
+          <div class="step-2A">
+            <h4>Langkah 2 - Persediaan Sebelum Rakaman</h4>
+            <p>
+              - Sila gunakan mikrofon telefon untuk merakamkan suara anda,
+              jangan gunakan fon kepala! ! ! Hanya klik "Mula Rakaman" apabila
+              anda mempunyai sambungan internet yang stabil.
+            </p>
+          </div>
+
+          <div class="step-3A">
+            <h4>Langkah 3 - Klik "Mula Rakaman"</h4>
+            <p>
+              - Pegang telefon anda dalam posisi yang selesa dan letakkan mulut
+              anda berdekatan dengan mikrofon. Bacakan skrip bacaan di bawah
+              dengan lantang pada kadar pertuturan normal sehingga bar kemajuan
+              mencapai 100%.
+            </p>
+          </div>
+
+          <div class="step-4A">
+            <h4>Langkah 4 - Klik "Hentikan/ Ulang Rakaman"</h4>
+            <p>
+              - Anda boleh klik "Hentikan Rakaman" jika anda ingin membatalkan
+              rakaman. Anda boleh semak rakaman melalui pemain. Jika anda tidak
+              berpuas hati, anda boleh klik "Ulang Rakaman". Selepas mengesahkan
+              rakaman, klik "Seterusnya".
+            </p>
+          </div>
+
+          <div class="step-5A">
+            <h4>Langkah 5 - Isi Profil Peribadi</h4>
+            <p>
+              - Sila berikan maklumat yang benar dan lengkap, jika tidak, ia
+              akan menjejaskan proses untuk menyediakan laporan kesihatan
+              fizikal dan mental anda.
+            </p>
+          </div>
+
+          <div class="step-6A">
+            <h4>Langkah 6 - Klik "Muat Naik Rakaman"</h4>
+            <p>
+              - Selepas mengisi profil peribadi, klik "Muat Naik Rakaman". Masa
+              muat naik bergantung pada kelajuan internet, biasanya mengambil
+              masa 1-2 minit. Apabila "Rakaman anda berjaya dimuat naik. Terima
+              kasih!" muncul, itu bermakna selesai.
+            </p>
+            <p style="text-decoration-line: underline">
+              - Kami akan menghubungi anda dalam masa 48 jam.
+            </p>
+          </div>
         </div>
 
-        <div class="step-3A">
-          <h2>Langkah 3 &#45; Klik "Mulakan Rakaman"</h2>
-          <p>
-            - Pegang telefon anda pada kedudukan yang selesa dan dekatkan mulut
-            anda dengan mikrofon.
-          </p>
-          <p>
-            - Baca skrip bacaan di bawah dengan kuat pada kadar pertuturan biasa
-            anda sehingga bar kemajuan mencapai 100%.
-          </p>
-        </div>
-
-        <div class="step-4A">
-          <h2>Langkah 4 &#45; Klik "Hentikan/Buat Semula Rakaman"</h2>
-          <p>
-            - Anda boleh mengklik "Hentikan Rakaman" jika anda ingin membatalkan
-            rakaman.
-          </p>
-          <p>
-            - Anda boleh menyemak rakaman melalui pemain audio. Jika anda tidak
-            berpuas hati, anda boleh klik "Buat Semula Rakaman".
-          </p>
-          <p>- Selepas mengesahkan rakaman, klik "Seterusnya".</p>
-        </div>
-
-        <div class="step-5A">
-          <h2>Langkah 5 &#45; Isikan butiran peribadi</h2>
-          <p>
-            - Sila berikan maklumat yang benar dan lengkap, jika tidak, ia akan
-            menjejaskan kami untuk memberikan laporan kesihatan fizikal dan
-            mental anda.
-          </p>
-        </div>
-
-        <div class="step-6A">
-          <h2>Langkah 6 &#45; Klik "Muat Naik Rakaman"</h2>
-          <p>- Selepas mengisi butiran peribadi, klik "Muat Naik Rakaman".</p>
-          <p>
-            - Masa muat naik bergantung pada kelajuan internet, tetapi biasanya
-            mengambil masa 1-2 minit.
-          </p>
-          <p>
-            - Apabila "Rakaman anda berjaya dimuat naik. Terima kasih!" muncul,
-            ini bermakna ia telah selesai.
-          </p>
-          <p>- Kami akan menghubungi anda dalam masa 24 jam.</p>
-        </div>
+        <button onclick="scrollToSection()" class="read-more-button">
+          Baca Lagi
+        </button>
       </div>
 
       <div class="mic">
@@ -125,7 +160,7 @@
       </div>
 
       <div id="main-block" class="hidden">
-        <h3>Maklumat Peribadi</h3>
+        <h4>Profil peribadi</h4>
         <form action="index.html" name="google-sheet">
           <hr />
           <label id="icon" for="name"><i class="fas fa-user"></i></label>
@@ -133,7 +168,7 @@
             type="text"
             name="name"
             id="name"
-            placeholder="Nama"
+            placeholder="Name"
             required
           />
           <br />
@@ -143,7 +178,7 @@
             type="text"
             name="email"
             id="email"
-            placeholder="E-Mel"
+            placeholder="Email"
             required
           />
           <br />
@@ -157,7 +192,7 @@
             type="text"
             name="dob"
             id="dob"
-            placeholder="Tarikh lahir (DD/MM/YYYY)"
+            placeholder="Date of Birth (DD/MM/YYYY)"
             required
           />
 
@@ -166,19 +201,19 @@
               ><i class="fas fa-venus-mars"></i
             ></label>
             <input type="radio" value="Male" id="male" name="gender" />
-            <label for="male" class="radio">Lelaki</label>
+            <label for="male" class="radio">Male</label>
             <input type="radio" value="Female" id="female" name="gender" />
-            <label for="female" class="radio">Perempuan</label>
+            <label for="female" class="radio">Female</label>
           </div>
 
           <label id="icon" for="name"><i class="fas fa-pills"></i></label>
-          Adakah anda sedang mengambil ubat barat?
+          Sedang mengambil ubat barat?
           <br />
           <div class="medicine">
             <input type="radio" value="Yes" id="med_yes" name="med" />
-            <label for="med_yes" class="radio">Ya</label>
+            <label for="med_yes" class="radio">Yes </label>
             <input type="radio" value="No" id="med_no" name="med" />
-            <label for="med_no" class="radio">Tidak</label>
+            <label for="med_no" class="radio"> No</label>
           </div>
           <br />
 
@@ -187,7 +222,7 @@
             type="text"
             name="referral"
             id="referral"
-            placeholder="Masukkan kod rujukan (jika ada)"
+            placeholder="Insert associate code (if any)"
             required
           />
           <br />
@@ -197,10 +232,10 @@
 
       <div class="audio-controls">
         <button id="submit" class="hidden">
-          Muat Naik Rakaman <i class="fas fa-upload"></i>
+          Muat naik Rakaman <i class="fas fa-upload"></i>
         </button>
         <button id="next" class="hidden">
-          Seterusnya <i class="fas fa-caret-square-right"></i>
+          Next <i class="fas fa-caret-square-right"></i>
         </button>
       </div>
 
@@ -212,7 +247,7 @@
           Hentikan Rakaman <i class="fas fa-microphone-slash"></i>
         </button>
         <button id="redo" class="hidden">
-          Rekod Semula <i class="fas fa-microphone"></i>
+          Buat semula Rakaman <i class="fas fa-microphone"></i>
         </button>
       </div>
 
@@ -232,46 +267,62 @@
 
       <div id="script">
         <div class="reading-script">
-          <h3>Skrip Bacaan</h3>
+          <h4>Skrip Bacaan</h4>
+          <br /><br />
           <div class="step-1A">
-            Visi Voice for Health adalah untuk membawa kesedaran dan
-            kemudahan Vocal Biomarker teknologi kepada dunia melalui rakan
-            sekerja kami.
+            Suara manusia adalah sesuatu yang luar biasa. Ia membezakan kita
+            daripada makhluk lain di planet ini. Ia adalah cara kita berhubung
+            antara satu sama lain, menyampaikan emosi dan idea, dan memahami
+            dunia di sekeliling kita.
             <br /><br />
-            Voice for health menawarkan penyelesaian perisian dalam talian yang inovatif
-            yang mengukur corak dalam frekuensi suara dan otak, dan
-            menterjemahkannya ke dalam pelbagai tahap kesejahteraan emosi dan
-            kesihatan fizikal.
+            Di Voice for Health, kami terpegun dengan kuasa suara manusia, bukan
+            hanya untuk berkomunikasi, tetapi juga untuk mengesan tanda-tanda
+            awal penyakit. Melalui perkhidmatan Biomarker Vokal kami, kami dapat
+            menganalisis corak suara dan mengesan perubahan halus yang mungkin
+            menunjukkan permulaan pelbagai penyakit. Melalui sumbangan suara
+            anda, kami dapat menghasilkan Laporan Kesihatan Pencegahan.
             <br /><br />
-            Teknologi teras ini dikembangkan di Belanda berdasarkan kajian dalam
-            Fizik, Fizik Kuantum, Biokimia, Epigenetik, Psikologi dan bidang
-            penyelidikan lain dari pelbagai univers iti di seluruh dunia. Dengan
-            menggunakan teknologi AI dan Big Data, perisian ini dapat
-            menghubungkan getaran vokal dan gelombang otak dengan emosi. Sistem
-            mengenal pasti dan menentukan emosi yang mendasari dengan
-            menghubungkan input vokal atau gelombang otak dengan algoritma
-            proses tertentu di bahagian otak yang berlainan.
+            Bayangkan bahawa kami dapat mengesan tanda-tanda awal penyakit
+            pernafasan, gangguan kardiovaskular, atau keadaan neurologi, hanya
+            dengan menganalisis bunyi suara anda. Kami menggunakan kuasa AI dan
+            pembelajaran mesin untuk menganalisis data suara dan mengesan tanda
+            awal penyakit, membolehkan profesional kesihatan mendiagnosis dan
+            merawat pesakit lebih awal, dan dengan keseluruhan, meningkatkan
+            kualiti hidup.
             <br /><br />
-            Perisian ini dapat mengukur kecerdasan emosi dan kesihatan fizikal
-            anda dan menghasilkan laporan peribadi anda. Laporan kesihatan emosi
-            menunjukkan tahap tekanan anda, keadaan emosi, bawah sedar, potensi
-            dalaman, tingkah laku, ciri dan keperibadian yang konstruktif dan
-            terhad, deria pembelajaran dan komunikasi. Laporan kesihatan fizikal
-            menunjukkan potensi risiko kesihatan anda untuk pengurusan awal.
-
+            Namun, itu belum semuanya. Kami juga sedang menerokai cara di mana
+            suara manusia boleh digunakan untuk mempromosikan kesihatan mental
+            dan kesejahteraan. Teknologi analisis suara kami dapat mengesan
+            perubahan halus dalam suara seseorang yang mungkin menunjukkan
+            perubahan dalam suasana hati, tahap tekanan, atau fungsi kognitif.
+            Dengan menganalisis corak suara ini, kami dapat membantu orang
+            memahami kesihatan mental mereka sendiri dengan lebih baik dan
+            mengambil langkah proaktif untuk kesejahteraan yang lebih baik.
             <br /><br />
-            Testimoni Pelanggan 1 : Alat yang luar biasa untuk mengetahui dan
-            memahami potensi dan kelemahan diri anda. Ia dapat mengatasi tekanan
-            anda dan menenangkan fikiran.
+            Contohnya, bayangkanlah anda dapat menggunakan suara anda untuk
+            mengesan tanda-tanda awal kemurungan atau kebimbangan berlebihan,
+            dan mengambil langkah-langkah untuk menguruskan keadaan tersebut
+            sebelum menjadi lebih serius. Atau bayangkan dapat menggunakan suara
+            anda untuk meningkatkan fokus dan konsentrasi, serta meningkatkan
+            prestasi kognitif secara keseluruhan.
             <br /><br />
-            Testimoni Pelanggan 2: Perisian ini adalah alat yang berguna untuk
-            membantu profesional pembangunan peribadi memahami proses dan
-            tingkah laku mental pelanggan mereka untuk merancang terapi atau
-            merancang intervensi yang dapat membantu klien.
-
+            Di Voice for Health, kami komited untuk menerokai bagaimana suara
+            manusia boleh digunakan untuk mempromosikan kesihatan dan
+            kesejahteraan, dan membuka rahsia kesihatan manusia untuk faedah
+            semua orang. <br /><br />
+            Jadi, jika anda berminat untuk mengambil bahagian dalam analisis
+            suara kami, kami mengundang anda dalam perjalanan penemuan ini.
+            Dengan menyumbang suara anda, anda akan membolehkan diri anda
+            membangunkan pemahaman yang lebih baik tentang hubungan antara suara
+            dan kesihatan, dan anda akan mengambil langkah proaktif ke arah
+            kesihatan dan kesejahteraan yang lebih baik untuk diri sendiri.
             <br /><br />
-            ***Ulang bacaan sehingga bar kemajuan mencapai 100%.
-            <br /><br /><br /><br /><br /><br />
+            Sebagai kesimpulan, mari kita meraikan keajaiban suara manusia, dan
+            mari kita terus meneroka pelbagai cara di mana ia dapat digunakan
+            untuk menaikkan taraf kesihatan dan kesejahteraan. Terima kasih
+            kerana mempertimbangkan Voice for Health.
+            <br /><br /><br /><br />
+            * Ulang bacaan jika perlu sehingga bar kemajuan mencapai 100%
           </div>
         </div>
       </div>
@@ -288,7 +339,7 @@
         <div class="shadow"></div>
         <div class="shadow"></div>
         <div class="shadow"></div>
-        <span>Pemprosesan...</span>
+        <span>Processing...</span>
       </div>
     </div>-->
     </div>
@@ -301,11 +352,43 @@
         <div class="shadow"></div>
         <div class="shadow"></div>
         <div class="shadow"></div>
-        <span>Memuat Naik...</span>
+        <span>Uploading...</span>
       </div>
     </div>
 
     <script>
+      const readMoreButton = document.querySelector(".read-more-button");
+      const shortVersion = document.querySelector(".short-version");
+      const fullVersion = document.querySelector(".full-version");
+
+      readMoreButton.addEventListener("click", () => {
+        if (shortVersion.classList.contains("hidden")) {
+          // "Read More" was clicked
+          readMoreButton.textContent = "Baca Lagi";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        } else {
+          // "Read Less" was clicked
+          readMoreButton.textContent = "Baca kurang";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        }
+      });
+
+      function scrollToSection() {
+        var section = document.getElementById("recorder-instructions");
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
       document.addEventListener("scroll", handleScroll);
       var rootElement = document.documentElement;
 
@@ -340,47 +423,47 @@
         var os = Object.values(parser.getResult().os)[0].toLowerCase();
         var ver = Object.values(parser.getResult().os)[1].toLowerCase();
 
-        //document.querySelector("h1").innerText = os +" "+parseInt(ver);
+        //document.querySelector("h1").innerText = browserName;
 
-        /*if ((browserName.match(/edge/i))||(browserName.match(/chrome/i))||(browserName.match(/webview/i))) {          
+        /*if ((browserName.match(/edge/i))||(browserName.match(/chrome/i))||(browserName.match(/webview/i))) {        
         $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Firefox, Safari, QQ or WeChat.";
-        alert('Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Firefox, Safari, QQ or WeChat.')
+        //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+        alert('Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.')
         location.replace("https://"+window.location.hostname)
       }*/
 
         if (browserName.match(/webview/i)) {
           $("#MAIN").addClass("hidden");
-          //document.querySelector("h1").innerText = "Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Firefox, Safari, QQ or WeChat.";
+          //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
           alert(
-            "Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Chrome, Firefox, Safari, QQ or WeChat."
+            "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Chrome, Firefox, Safari, QQ or WeChat."
           );
           location.replace("https://" + window.location.hostname);
         }
 
-        if (os.match(/android/i) && parseInt(ver) < 10) {
-          $("#MAIN").addClass("hidden");
-          //document.querySelector("h1").innerText = "Maaf, versi Android anda tidak disokong!\n Pada masa ini sistem menyokong Android versi 10.0 dan ke atas.";
-          alert(
-            "Maaf, versi Android anda tidak disokong!\n Pada masa ini sistem menyokong Android versi 10.0 dan ke atas."
-          );
-          location.replace("https://" + window.location.hostname);
-        }
+        // if (os.match(/android/i) && parseInt(ver) < 10) {
+        //   $("#MAIN").addClass("hidden");
+        //   //document.querySelector("h1").innerText = "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above.";
+        //   alert(
+        //     "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above."
+        //   );
+        //   location.replace("https://" + window.location.hostname);
+        // }
 
         if (os.match(/mac os/i) && parseInt(ver) < 10) {
           $("#MAIN").addClass("hidden");
-          //document.querySelector("h1").innerText = "Maaf, versi Mac OS anda tidak disokong!\n Pada masa ini sistem menyokong Mac OS versi 10.0 dan ke atas.";
+          //document.querySelector("h1").innerText = "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above.";
           alert(
-            "Maaf, versi Mac OS anda tidak disokong!\n Pada masa ini sistem menyokong Mac OS versi 10.0 dan ke atas."
+            "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above."
           );
           location.replace("https://" + window.location.hostname);
         }
 
         if (os.match(/ios/i) && parseInt(ver) < 14) {
           $("#MAIN").addClass("hidden");
-          //document.querySelector("h1").innerText = "Maaf, versi iOS anda tidak disokong!\n Pada masa ini sistem menyokong iOS versi 14.0 dan ke atas.";
+          //document.querySelector("h1").innerText = "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above.";
           alert(
-            "Maaf, versi iOS anda tidak disokong!\n Pada masa ini sistem menyokong iOS versi 14.0 dan ke atas."
+            "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above."
           );
           location.replace("https://" + window.location.hostname);
         }
@@ -434,10 +517,10 @@
       }
     </script>
 
-    <script src="ml/mobile_script.js"></script>
-    <script src="ml/script_ml.js"></script>
-    <script src="ml/wave-resampler.js"></script>
-    <script src="ml/jquery.min.js"></script>
+    <script src="./ml/mobile_script.js"></script>
+    <script src="./ml/script_ml.js"></script>
+    <script src="./ml/wave-resampler.js"></script>
+    <script src="./ml/jquery.min.js"></script>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
     <script src="https://unpkg.com/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js"></script>

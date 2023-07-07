@@ -19,14 +19,14 @@ let data_view_LR = null;
   let AudioContext = window.AudioContext || window.webkitAudioContext;
   let context = null;
   let analyser = null;
-  let canvas = document.querySelector('canvas');
+  let canvas = document.querySelector("canvas");
   let canvasCtx = canvas.getContext("2d");
-  let visualSelect = document.querySelector('#visSelect');
-  let micSelect = document.querySelector('#micSelect');
+  let visualSelect = document.querySelector("#visSelect");
+  let micSelect = document.querySelector("#micSelect");
   let stream = null;
   let tested = false;
   let new_sampleRate = 44100;
-  let min_duration = 210;
+  let min_duration = 270;
   let HP_filter = false;
   let delay = 0;
 
@@ -39,9 +39,12 @@ let data_view_LR = null;
   stopButton.addEventListener("click", stop);
 
   // redo recording
-  redoButton = document.getElementById("redo");
-  redoButton.addEventListener("click", redo);
-
+  const redoButton = document.getElementById("redo");
+  redoButton.addEventListener("click", function () {
+    if (confirm("Adakah anda pasti mahu membuat semula rakaman?")) {
+      redo();
+    }
+  });
   // next
   nextButton = document.getElementById("next");
   nextButton.addEventListener("click", next);
@@ -52,14 +55,18 @@ let data_view_LR = null;
 
   try {
     window.stream = stream = await getStream();
-    console.log('Got stream');
-  }
-  catch (err) {
-    alert('Nampaknya mikrofon anda tidak berfungsi!\n\n Sila semak tetapan mikrofon anda.', err);
-    $("#MAIN").addClass("hidden")
-    //document.querySelector("h1").innerText = "Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Firefox, Safari, QQ or WeChat.";
-    alert('Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Chrome, Firefox, Safari, QQ or WeChat.');
-    location.replace("https://"+window.location.hostname)
+    console.log("Got stream");
+  } catch (err) {
+    alert(
+      "Ada masalah dengan mikrofon anda!\n\n Sila semak tetapan mikrofon anda.",
+      err
+    );
+    $("#MAIN").addClass("hidden");
+    //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+    alert(
+      "Maaf, penyemak imbas anda tidak disokong!\n Untuk pengalaman terbaik, sila gunakan mana-mana penyemak imbas yang disokong ini:\n Chrome, Firefox, Safari, QQ atau WeChat."
+    );
+    location.replace("https://" + window.location.hostname);
   }
 
   const deviceInfos = await navigator.mediaDevices.enumerateDevices();
@@ -67,12 +74,11 @@ let data_view_LR = null;
   var mics = [];
   for (let i = 0; i !== deviceInfos.length; ++i) {
     let deviceInfo = deviceInfos[i];
-    if (deviceInfo.kind === 'audioinput') {
+    if (deviceInfo.kind === "audioinput") {
       mics.push(deviceInfo);
-      let label = deviceInfo.label ||
-        'Microphone ' + mics.length;
-      console.log('Mic ', label + ' ' + deviceInfo.deviceId)
-      const option = document.createElement('option')
+      let label = deviceInfo.label || "Microphone " + mics.length;
+      console.log("Mic ", label + " " + deviceInfo.deviceId);
+      const option = document.createElement("option");
       option.value = deviceInfo.deviceId;
       option.text = label;
       micSelect.appendChild(option);
@@ -117,7 +123,7 @@ let data_view_LR = null;
     recorder.connect(context.destination);
 
     recorder.onaudioprocess = function (e) {
-      // Check 
+      // Check
       if (!recording) return;
       // Do something with the data, i.e Convert this to WAV
 
@@ -128,17 +134,19 @@ let data_view_LR = null;
         tested = true;
         // if this reduces to 0 we are not getting any sound
         if (!left.reduce((a, b) => a + b)) {
-          alert("Nampaknya mikrofon anda tidak berfungsi!\n\n Sila semak tetapan mikrofon anda.")
+          alert(
+            "Ada masalah dengan mikrofon anda!\n\nSila semak tetapan mikrofon anda."
+          );
           // clean up;
           // stop();
           stream.getTracks().forEach(function (track) {
             track.stop();
           });
           context.close();
-          $("#MAIN").addClass("hidden")
-          //document.querySelector("h1").innerText = "Mikrofon anda diredamkan dalam tetapan penyemak imbas!\nSila salin pautan di bawah dan buka dengan pelayar lain\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://recording.minda.my";
-          alert('Mikrofon anda diredamkan dalam tetapan penyemak imbas!');
-          location.replace("https://"+window.location.hostname)
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Your microphone is muted in the browser settings!\nPlease copy the below link and open it with other browsers\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://voiceforhealth.online";
+          alert("Mikrofon anda diredamkan dalam tetapan penyemak imbas!");
+          location.replace("https://" + window.location.hostname);
         }
       }
 
@@ -148,29 +156,28 @@ let data_view_LR = null;
         // rightchannel.push(new Float64Array(right));
         recordingLength += bufferSize;
         dataLength += bufferSize;
-        duration_p = parseInt(dataLength / 48000 / min_duration * 100);
+        duration_p = parseInt((dataLength / 48000 / min_duration) * 100);
 
         document.getElementById("p_bar").style.width = duration_p + "%";
-        document.getElementById("p_percent").innerHTML = duration_p + '%';
+        document.getElementById("p_percent").innerHTML = duration_p + "%";
         delay = 0;
 
         if (duration_p >= 100) {
-          stop()
+          stop();
         }
-      }
-      else {
+      } else {
         if (parseInt(delay / 48000) <= 0.5) {
           left.forEach((elem, i) => {
             left[i] = 0;
-          })
+          });
           leftchannel.push(new Float64Array(left));
           recordingLength += bufferSize;
         }
-        delay += bufferSize
+        delay += bufferSize;
       }
     };
     visualize();
-  };
+  }
 
   // Visualizer function from
   // https://webaudiodemos.appspot.com/AudioRecorder/index.html
@@ -190,30 +197,27 @@ let data_view_LR = null;
 
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-
-
     var drawAlt = function () {
       drawVisual = requestAnimationFrame(drawAlt);
       analyser.getByteFrequencyData(dataArrayAlt);
-      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+      canvasCtx.fillStyle = "rgb(0, 0, 0)";
       canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      var barWidth = (WIDTH / bufferLengthAlt);
+      var barWidth = WIDTH / bufferLengthAlt;
       var barHeight;
       var x = 0;
 
       if (Math.abs(dataArrayAlt.reduce((a, b) => a + b)) > 7500) {
         HP_filter = true;
-      }
-      else {
+      } else {
         HP_filter = false;
       }
-
 
       for (var i = 0; i < bufferLengthAlt; i++) {
         barHeight = dataArrayAlt[i];
 
-        canvasCtx.fillStyle = "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
+        canvasCtx.fillStyle =
+          "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
         canvasCtx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
         x += barWidth + 1;
       }
@@ -222,10 +226,13 @@ let data_view_LR = null;
   }
 
   function start() {
-    alert('Nota:\n- Pastikan anda mencari ruang yang sunyi dan matikan kipas/aircond. \n- Letakkan telefon pada mod senyap. \n- Terdapat 5 perenggan dalam skrip bacaan ini, sila baca dengan kuat pada kelajuan biasa sehingga bar kemajuan mencapai 100%.');
+    alert(
+      " Perhatian：\n- Pastikan anda mencari ruang yang sunyi dan matikan kipas/penghawa dingin.\n- Letakkan telefon anda pada mod senyap.\n- Skrip bacaan direka bentuk untuk memberikan pemahaman dan panduan untuk mengumpul suara anda .\n- Anda hanya boleh membacanya dengan kuat pada kelajuan biasa sehingga bar kemajuan mencapai 100%."
+    );
     setUpRecording();
     recordButton.disabled = true;
-    recordButton.innerHTML = 'Rakaman sedang berjalan <i class="fa fa-spinner fa-spin"></i>'
+    recordButton.innerHTML =
+      'Rakaman sedang berjalan <i class="fa fa-spinner fa-spin"></i>';
     // $("#record").addClass("button-animate");
 
     $("#stop").removeClass("hidden");
@@ -235,12 +242,12 @@ let data_view_LR = null;
     $("#progress").removeClass("hidden");
 
     if (!$("#audio").hasClass("hidden")) {
-      $("#audio").addClass("hidden")
-    };
+      $("#audio").addClass("hidden");
+    }
 
     if (!$("#submit").hasClass("hidden")) {
-      $("#submit").addClass("hidden")
-    };
+      $("#submit").addClass("hidden");
+    }
 
     const element = document.getElementById("record");
     element.scrollIntoView(true);
@@ -256,7 +263,8 @@ let data_view_LR = null;
   function stop() {
     $("#record").addClass("hidden");
     stopButton.disabled = true;
-    stopButton.innerHTML = 'Pemprosesan... <i class="fa fa-spinner fa-spin"></i>'
+    stopButton.innerHTML =
+      'Processing... <i class="fa fa-spinner fa-spin"></i>';
     $("#script").addClass("hidden");
     $("#analyser").addClass("hidden");
     $("#progress").addClass("hidden");
@@ -270,33 +278,36 @@ let data_view_LR = null;
       // we interleave both channels together
       // let interleaved = interleave(leftBuffer, rightBuffer);
 
-      data_view_L = exportWAV(leftBuffer, 0.65)
+      data_view_L = exportWAV(leftBuffer, 0.65);
       // data_view_R = exportWAV(rightBuffer, 1)
-      // data_view_LR = exportWAV(interleaved, 1)      
+      // data_view_LR = exportWAV(interleaved, 1)
       // our final binary blob
-      const blob = new Blob([data_view_L], { type: 'audio/wav' });
+      const blob = new Blob([data_view_L], { type: "audio/wav" });
       const audioUrl = URL.createObjectURL(blob);
-      document.querySelector('#audio').setAttribute('src', audioUrl);
+      document.querySelector("#audio").setAttribute("src", audioUrl);
 
-      console.log('Stop')
+      console.log("Stop");
       $("#stop").addClass("hidden");
       $("#audio").removeClass("hidden");
-      stopButton.innerHTML = 'Hentikan Rakaman <i class="fas fa-microphone-slash"></i>'
+      stopButton.innerHTML =
+        'Stop Recording <i class="fas fa-microphone-slash"></i>';
       $("#redo").removeClass("hidden");
-      $("#next").removeClass("hidden");      
+      $("#next").removeClass("hidden");
       //$("#transbox_1").addClass("hidden");
       document.getElementById("next").scrollIntoView(true);
     }, 500);
 
     var duration = parseInt(recordingLength / 48000);
     if (duration < min_duration) {
-      alert('Tempoh rakaman anda terlalu singkat. Sila rekod semula.\n\nSila baca skrip bacaan dengan kuat pada kelajuan biasa sehingga bar kemajuan mencapai 100%.');
+      alert(
+        "Tempoh rakaman anda terlalu pendek. Sila buat semula rakaman.\n\nBaca skrip dengan kuat pada kelajuan biasa sehingga bar kemajuan mencapai 100%."
+      );
       redo();
     }
   }
 
   function redo() {
-    window.location.reload()
+    window.location.reload();
   }
 
   function next() {
@@ -326,11 +337,11 @@ let data_view_LR = null;
     let view = new DataView(buffer);
 
     // RIFF chunk descriptor
-    writeUTFBytes(view, 0, 'RIFF');
+    writeUTFBytes(view, 0, "RIFF");
     view.setUint32(4, 36 + dataBuffer.length * 2, true);
-    writeUTFBytes(view, 8, 'WAVE');
+    writeUTFBytes(view, 8, "WAVE");
     // FMT sub-chunk
-    writeUTFBytes(view, 12, 'fmt ');
+    writeUTFBytes(view, 12, "fmt ");
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true);
     view.setUint16(22, 1, true);
@@ -339,7 +350,7 @@ let data_view_LR = null;
     view.setUint16(32, 2, true);
     view.setUint16(34, 16, true);
     // data sub-chunk
-    writeUTFBytes(view, 36, 'data');
+    writeUTFBytes(view, 36, "data");
     view.setUint32(40, dataBuffer.length * 2, true);
 
     // write the PCM samples
@@ -347,7 +358,7 @@ let data_view_LR = null;
     let index = 44;
     let volume = gain;
     for (let i = 0; i < lng; i++) {
-      view.setInt16(index, dataBuffer[i] * (0x7FFF * volume), true);
+      view.setInt16(index, dataBuffer[i] * (0x7fff * volume), true);
       index += 2;
     }
 
@@ -355,7 +366,7 @@ let data_view_LR = null;
     //   var s = Math.max(-1, Math.min(1, dataBuffer[i]));
     //   view.setInt16(index, s < 0 ? s * 0x8000 : s * (0x7FFF * volume), true);
     // }
-    return view
+    return view;
   }
 
   function interleave(leftChannel, rightChannel) {
@@ -379,102 +390,174 @@ let data_view_LR = null;
   }
 
   function submit() {
-    var name = document.getElementById("name").value.length
-    var email = document.getElementById("email").value.length
-    var mobile = document.getElementById("mobile").value.length
-    var dob = document.getElementById("dob").value.length
+    var name = document.getElementById("name").value.length;
+    var email = document.getElementById("email").value.length;
+    var mobile = document.getElementById("mobile").value.length;
+    var dob = document.getElementById("dob").value.length;
     var male = document.getElementById("male").checked;
     var female = document.getElementById("female").checked;
-    var med_yes = document.getElementById("med_yes").checked
-    var med_no = document.getElementById("med_no").checked
-    var v_email = ValidateEmail(document.getElementById("email").value.trim())
-    var v_mobile = phonenumber(document.getElementById("mobile").value.trim())
-    var v_dob = ValidateDOB(document.getElementById("dob").value.trim())
+    var med_yes = document.getElementById("med_yes").checked;
+    var med_no = document.getElementById("med_no").checked;
+    var v_email = ValidateEmail(document.getElementById("email").value.trim());
+    var v_mobile = phonenumber(document.getElementById("mobile").value.trim());
+    var v_dob = ValidateDOB(document.getElementById("dob").value.trim());
     var duration = parseInt(recordingLength / 48000);
 
-    if (name > 0 && v_email && v_mobile && v_dob && (male || female) && (med_yes || med_no) && duration >= min_duration) {
+    if (
+      name > 0 &&
+      v_email &&
+      v_mobile &&
+      v_dob &&
+      (male || female) &&
+      (med_yes || med_no) &&
+      duration >= min_duration
+    ) {
       submitButton.disabled = true;
-      submitButton.innerHTML = 'Memuat Naik <i class="fa fa-spinner fa-spin"></i>'
+      submitButton.innerHTML =
+        'Uploading <i class="fa fa-spinner fa-spin"></i>';
       $("#redo").addClass("hidden");
       $("#audio").addClass("hidden");
       $("#transbox_2").removeClass("hidden");
 
       var timestamp = new Date();
-      var date = timestamp.toISOString().slice(0, 10).trim()
-      var time = timestamp.toLocaleString("en-US", { hour12: false }, { timeZone: "Asia/Kuala_Lumpur" }).split(",")[1].trim()
-      var name = document.getElementById("name").value
-      var email = document.getElementById("email").value.trim()
-      var mobile = document.getElementById("mobile").value.trim()
-      var dob = document.getElementById("dob").value.replaceAll('/', '-').trim()
-      var gender = ""
-      var medication = ""
-      var referral = "Ser.Brandon"
+      var date = timestamp.toISOString().slice(0, 10).trim();
+      var time = timestamp
+        .toLocaleString(
+          "en-US",
+          { hour12: false },
+          { timeZone: "Asia/Kuala_Lumpur" }
+        )
+        .split(",")[1]
+        .trim();
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value.trim();
+      var mobile = document.getElementById("mobile").value.trim();
+      var dob = document
+        .getElementById("dob")
+        .value.replaceAll("/", "-")
+        .trim();
+      var gender = "";
+      var medication = "";
+      var referral = "Ser.Brandon";
 
       if (male) {
-        gender = "M"
-      }
-      else {
-        gender = "F"
+        gender = "M";
+      } else {
+        gender = "F";
       }
 
       if (med_yes) {
-        medication = "Y"
-      }
-      else {
-        medication = "N"
+        medication = "Y";
+      } else {
+        medication = "N";
       }
 
       var parser = new UAParser();
       // console.log(parser.getResult());
       var browser = Object.values(parser.getResult().browser)[0];
-      var os = Object.values(parser.getResult().os)[0] + " " + Object.values(parser.getResult().os)[1];
+      var os =
+        Object.values(parser.getResult().os)[0] +
+        " " +
+        Object.values(parser.getResult().os)[1];
       var model = Object.values(parser.getResult().device)[0];
       var type = Object.values(parser.getResult().device)[1];
       var vendor = Object.values(parser.getResult().device)[2];
       var cpu = Object.values(parser.getResult().cpu)[0];
 
-      filename = date + "," + time + "," + name + "," + email + "," + mobile + "," + dob + "," + gender + "," + medication + "," + sampleRate + "," + browser + "," + os + "," + model + "," + type + "," + vendor + "," + cpu + "," + referral
-      file_L = new File([data_view_L], filename + ",ML" + '.wav', { type: "audio/wav" });
+      filename =
+        date +
+        "," +
+        time +
+        "," +
+        name +
+        "," +
+        email +
+        "," +
+        mobile +
+        "," +
+        dob +
+        "," +
+        gender +
+        "," +
+        medication +
+        "," +
+        sampleRate +
+        "," +
+        browser +
+        "," +
+        os +
+        "," +
+        model +
+        "," +
+        type +
+        "," +
+        vendor +
+        "," +
+        cpu +
+        "," +
+        referral;
+      file_L = new File([data_view_L], filename + ",ML" + ".wav", {
+        type: "audio/wav",
+      });
 
-      uploadFile(file_L, filename)
+      var data = {
+        date: date,
+        time: time,
+        name: name,
+        email: email,
+        mobile: mobile,
+        dob: dob,
+        gender: gender,
+        medication: medication,
+        sampleRate: sampleRate,
+        browser: browser,
+        os: os,
+        model: model,
+        type: type,
+        vendor: vendor,
+        cpu: cpu,
+        referral: referral,
+      };
+      var jsonData = JSON.stringify(data);
+      uploadFile(file_L, filename, jsonData);
 
-      // document.getElementById("name").value = ""
-      // document.getElementById("email").value = ""
-      // document.getElementById("mobile").value = ""
-      // document.getElementById("dob").value = ""
-      // document.getElementById("male").checked = false
-      // document.getElementById("female").checked = false
-      // document.getElementById("med_yes").checked = false
-      // document.getElementById("med_no").checked = false
-    }
+      //dummey data
 
-    else if (duration < min_duration) {
-      alert('Tempoh rakaman anda terlalu singkat. Sila rekod semula.\n\nSila baca skrip bacaan dua kali dengan kuat pada kelajuan biasa. Ia mengambil masa sekitar 4 minit.');
-      document.getElementById("record").scrollIntoView(true);
-      redo()
-    }
-    else if (name < 1) {
-      alert('Sila berikan nama!');
+      //   document.getElementById("name").value = "abdul"
+      //   document.getElementById("email").value = "email@server.com"
+      //   document.getElementById("mobile").value = "+601160503498"
+      //   document.getElementById("dob").value = "12/12/1999"
+      //   document.getElementById("male").checked = false
+      //   document.getElementById("female").checked = false
+      //   document.getElementById("med_yes").checked = false
+      //   document.getElementById("med_no").checked = false
+    } else if (duration < min_duration) {
+      alert(
+        "Tempoh rakaman anda terlalu pendek. Sila buat semula rakaman.\n\nBaca skrip dengan kuat pada kelajuan biasa sehingga bar kemajuan mencapai 100%."
+      );
+      document.getElementById("rekod").scrollIntoView(true);
+      redo();
+    } else if (name < 1) {
+      alert("Sila berikan nama anda!");
       document.getElementById("name").scrollIntoView(true);
-    }
-    else if (!v_email) {
-      alert('Sila semak dan berikan alamat e-mel sebenar anda untuk memastikan penerimaan laporan.');
+    } else if (!v_email) {
+      alert(
+        "Sila semak dan berikan alamat e-mel sebenar anda untuk memastikan penerimaan laporan."
+      );
       document.getElementById("email").scrollIntoView(true);
-    }
-    else if (!v_mobile) {
-      alert('Sila berikan nombor telefon bimbit sebenar! (termasuk + kod negara)\n Contoh: +XX-XXXXXXXXX');
+    } else if (!v_mobile) {
+      alert(
+        "Sila berikan nombor mudah alih sebenar! (termasuk + kod negara)\n Contoh: +XX-XXXXXXXXX"
+      );
       document.getElementById("mobile").scrollIntoView(true);
-    }
-    else if (!v_dob) {
-      alert("Sila masukkan tarikh lahir anda dalam format DD/MM/YYYY")
+    } else if (!v_dob) {
+      alert("Masukkan tarikh lahir anda dalam format DD/MM/YYYY SAHAJA.");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!male && !female) {
-      alert('Sila pilih jantina!');
+    } else if (!male && !female) {
+      alert("Sila pilih jantina!");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!med_yes && !med_no) {
-      alert('Sila pilih jika anda mengambil ubat!');
+    } else if (!med_yes && !med_no) {
+      alert("Sila pilih sama ada anda sedang mengambil sebarang ubat!");
       document.getElementById("dob").scrollIntoView(true);
     }
   }
@@ -484,8 +567,8 @@ let data_view_LR = null;
     visualize();
   };
 
-  micSelect.onchange = async e => {
-    console.log('now use device ', micSelect.value);
+  micSelect.onchange = async (e) => {
+    console.log("now use device ", micSelect.value);
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
@@ -493,15 +576,16 @@ let data_view_LR = null;
 
     stream = await getStream({
       audio: {
-        deviceId: { exact: micSelect.value }
-      }, video: false
+        deviceId: { exact: micSelect.value },
+      },
+      video: false,
     });
     setUpRecording();
-  }
+  };
 
   function pause() {
     recording = false;
-    context.suspend()
+    context.suspend();
   }
 
   function resume() {
@@ -513,8 +597,7 @@ let data_view_LR = null;
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (inputText.match(mailformat)) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -525,17 +608,16 @@ let data_view_LR = null;
     //Check whether valid dd/MM/yyyy Date Format.
     if (regex.test(inputText)) {
       //Test which seperator is used '/' or '-'
-      var opera1 = inputText.split('/');
-      var opera2 = inputText.split('-');
+      var opera1 = inputText.split("/");
+      var opera2 = inputText.split("-");
       lopera1 = opera1.length;
       lopera2 = opera2.length;
 
       // Extract the string into month, date and year
       if (lopera1 > 1) {
-        var pdate = inputText.split('/');
-      }
-      else if (lopera2 > 1) {
-        var pdate = inputText.split('-');
+        var pdate = inputText.split("/");
+      } else if (lopera2 > 1) {
+        var pdate = inputText.split("-");
       }
 
       var dd = parseInt(pdate[0]);
@@ -547,9 +629,7 @@ let data_view_LR = null;
       if (mm == 1 || mm > 2) {
         if (dd > ListofDays[mm - 1]) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
 
       if (mm == 2) {
@@ -558,90 +638,102 @@ let data_view_LR = null;
           lyear = true;
         }
 
-        if ((lyear == false) && (dd >= 29)) {
+        if (lyear == false && dd >= 29) {
           return false;
-        }
-        else if ((lyear == true) && (dd > 29)) {
+        } else if (lyear == true && dd > 29) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   function phonenumber(inputtxt) {
     if (isValidNumber(inputtxt)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   // Number will be with country code
   function isValidNumber(number) {
     try {
-      return new libphonenumber.parsePhoneNumber(number).isValid()
+      return new libphonenumber.parsePhoneNumber(number).isValid();
     } catch (error) {
-      return false
+      return false;
     }
   }
-})()
+})();
 
-async function uploadFile(file, fName) {
+async function uploadFile(file, fName, jsonData) {
   let formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", file, fName);
 
   try {
-    $.ajax({
-      url: "https://hook.eu1.make.com/8l7hwzifmqw3bb8k353yv8j92nlthkta",
+    const response = await fetch(`upload.php`, {
       method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",ML.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
+      body: formData,
     });
 
-    await fetch('upload.php', {
-      method: "POST",
-      body: formData
-    });
-    
-    $.ajax({
-      url: "https://hook.eu1.make.com/vlw96phpwf8146ndgjvabcsi5v8wzxzf",
-      method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",ML.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
-    });
+    if (response.ok) {
+      const jsonResponse = await response;
+      console.log(jsonResponse);
 
-    alert('Rakaman anda telah berjaya dimuat naik. \nKami akan menghubungi anda secepat mungkin. Terima kasih!');
+      alert(
+        "Rakaman anda telah berjaya dimuat naik.\nKami akan menghubungi anda secepat mungkin. Terima kasih!"
+      );
 
-    $("#transbox_2").addClass("hidden");
-    $("#record").removeClass("inactive");
-    recordButton.disabled = false;
+      console.log("jon", jsonData);
+      // Submit jsonData to another endpoint
+      const response2 = await fetch(
+        "https://hook.eu1.make.com/nl5e2s4hwfh807g76y1pabns3oxf9nrp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonData,
+        }
+      );
 
-    $("#submit").addClass("hidden");
-    submitButton.disabled = true;
-    submitButton.innerText = "Submit"
+      if (response2.ok) {
+        console.log("JSON data submitted successfully.");
+      } else {
+        console.error("Failed to submit JSON data.");
+      }
 
-    setTimeout(function () {
-      location.replace("https://www.voiceforhealth.online/")
-    }, 1000);
+      $("#transbox_2").addClass("hidden");
+      $("#record").removeClass("inactive");
+      recordButton.disabled = false;
+
+      $("#submit").addClass("hidden");
+      submitButton.disabled = true;
+      submitButton.innerText = "Submit";
+
+      setTimeout(function () {
+        location.replace("/");
+      }, 1000);
+    } else {
+      console.error("Failed to upload file.");
+      alert(
+        "Gagal memuat naik rakaman anda.\nSila pastikan anda mempunyai internet yang stabil dan muat naik rakaman itu semula."
+      );
+
+      submitButton.disabled = false;
+      submitButton.innerHTML =
+        'Muat naik Rakaman <i class="fas fa-upload"></i>';
+      $("#transbox_2").addClass("hidden");
+    }
   } catch (error) {
-    alert('Gagal memuat naik rakaman anda.\nSila pastikan anda mempunyai internet yang stabil dan muat naik rakaman semula.')
+    console.error(error);
+    alert(
+      "Gagal memuat naik rakaman anda.\nSila pastikan anda mempunyai internet yang stabil dan muat naik rakaman itu semula."
+    );
+
     submitButton.disabled = false;
-    submitButton.innerHTML = 'Muat Naik Rakaman <i class="fas fa-upload"></i>'
+    submitButton.innerHTML = 'Muat naik Rakaman <i class="fas fa-upload"></i>';
     $("#transbox_2").addClass("hidden");
   }
 }

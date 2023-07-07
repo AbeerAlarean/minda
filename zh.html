@@ -1,192 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
 
-<head>
-  <title>Voice For health</title>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="zh/manage-audio.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-    integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/css/intlTelInput.css" rel="stylesheet"
-    media="screen">
-  <script src="zh/flag.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/intlTelInput.js"></script>
-</head>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <title>Voice For health</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link
+      href="https://www.jqueryscript.net/css/jquerysctipttop.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="en/manage-audio-en.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/css/intlTelInput.css"
+      rel="stylesheet"
+      media="screen"
+    />
+    <script src="en/flag.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/intlTelInput.js"></script>
+  </head>
 
-<body onload="fnBrowserDetect()">
-  <h1></h1>
-  <div id="MAIN">
-    <h1>VHS 录音系统</h1>    
-    <p class="lead">通过声音探索身心健康<br>预防胜于治疗…</p>
-    
-    <div class="recorder-instructions">
-      <p1 >录音前需知</p1>
-      <div class="step-1A">
-        <h2>步骤1 &#45; 找一个安静的空间</h2>
-        <p> - 务必关掉风扇/冷气机，否则将会影响测试结果。</p>
-        <p> - 把手机调为静音模式。</p>
+  <body onload="fnBrowserDetect()">
+    <h1></h1>
+    <div id="MAIN">
+      <!--<h1>Voice for Health</h1>-->
+      <div class="logo-container">
+        <a href="index.html">
+          <img
+            class="logo"
+            src="./assets/green-576w.png"
+            alt="Voice For Health Logo"
+          />
+        </a>
       </div>
+      <p class="lead">通过您的声音, 发现您内在的健康<br />预防胜于治疗…</p>
 
-      <div class="step-2A">
-        <h2>步骤2 &#45; 录音前的准备</h2>
-        <p> - 请使用手机的麦克风录音，不要使用耳机！！！</p>
-        <p> - 在确保有稳定网络的情况下，才点击“开始录音”。 </p>
-      </div>
-
-      <div class="step-3A">
-        <h2>步骤3 &#45; 点击“开始录音”</h2>
-        <p> - 以舒适的姿势拿着手机，把嘴靠近手机收音处。</p>
-        <p> - 以正常的语速大声地念下方的阅读剧本, 直到进度条达到100%。</p>
-      </div>
-
-      <div class="step-4A">
-        <h2>步骤4 &#45; 点击“停止/重新录音”</h2>
-        <p> - 如果您想取消录制，可以点击“停止录制”。</p>
-        <p> - 您可以通过播放器检查录音。如果不满意，可以点击“重新录音”。</p>
-        <p> - 确认录音后，点击“下一步”。</p>
-      </div>
-
-      <div class="step-5A">
-        <h2>步骤5 &#45; 填写个人资料</h2>
-        <p> - 请提供真实完整的资料，否则会影响我们提供您的身心健康报告。</p>
-      </div>
-
-      <div class="step-6A">
-        <h2>步骤6 &#45; 点击“上传录音”</h2>
-        <p> - 填写个人资料后， 点击“上传录音”。</p>
-        <p> - 上传时间取决于网速，一般上耗时1-2分钟。</p>
-        <p> - 当"您的录音上传成功。谢谢！"弹出，这表示完成了。</p>
-        <p> - 我们将会在24小时内联系您。</p>
-      </div>
-    </div>
-
-    <div class="mic">
-      <select name="" id="micSelect"></select>
-
-      <select id="visSelect" class="hidden">
-        <option value="frequencybars">Bar</option>
-        <option value="sinewave">Wave</option>
-        <option value="circle">Circle</option>
-      </select>
-    </div>
-
-    <div id="main-block" class="hidden">
-      <h3>个人资料</h3>
-      <form action="index.html" name="google-sheet">
-        <hr>
-        <label id="icon" for="name"><i class="fas fa-user"></i></label>
-        <input type="text" name="name" id="name" placeholder="姓名" required />
-        <br>
-
-        <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
-        <input type="text" name="email" id="email" placeholder="电邮" required />
-        <br>
-
-        <label id="icon" for="name"><i class="fas fa-phone"></i></label>
-        <input type="tel" name="mobile" id="mobile" required />
-
-        <br>
-        <label id="icon" for="name"><i class="fas fa-calendar"></i></label>
-        <input type="text" name="dob" id="dob" placeholder="出生日期 (DD/MM/YYYY)" required />
-
-        <div class="sex">
-          <label id="icon" for="name"><i class="fas fa-venus-mars"></i></label>
-          <input type="radio" value="Male" id="male" name="gender" />
-          <label for="male" class="radio">男</label>
-          <input type="radio" value="Female" id="female" name="gender" />
-          <label for="female" class="radio">女</label>
-        </div>
-
-        <label id="icon" for="name"><i class="fas fa-pills"></i></label> 您现在是否有服用西药?
-        <br>
-        <div class="medicine">
-          <input type="radio" value="Yes" id="med_yes" name="med" />
-          <label for="med_yes" class="radio">是</label>
-          <input type="radio" value="No" id="med_no" name="med" />
-          <label for="med_no" class="radio">否</label>
-        </div>
-        <br>
-
-        <label id="icon" for="name"><i class="fas fa-id-card"></i></label>     
-        <input type="text" name="referral" id="referral" placeholder="输入推荐人代码 (若有)" required />   
-        <br>
-        <hr>
-      </form>
-    </div>
-
-    <div class="audio-controls">
-      <button id="submit" class="hidden">上传录音 <i class="fas fa-upload"></i></button>
-      <button id="next" class="hidden">下一步 <i class="fas fa-caret-square-right"></i></button>
-    </div>
-
-    <div class="audio-controls">
-      <button id="record">开始录音 <i class="fas fa-microphone"></i></button>
-      <button id="stop" class="hidden">停止录音 <i class="fas fa-microphone-slash"></i></button>
-      <button id="redo" class="hidden">重新录音 <i class="fas fa-microphone"></i></button>
-    </div>
-
-    <div id="viz">
-      <canvas id="analyser" width="1024" height="200" class="hidden"></canvas>
-    </div>
-
-    <div id="progress" class="hidden">
-	    <div id="p_bar" class="bar" style="width:0%">
-		    <p id="p_percent" class="percent">0%</p>
-	    </div>
-    </div>
-
-    <div class="audio-playback">
-      <audio id="audio" controls class="hidden"></audio>
-    </div>
-
-    <div id="script">
-      <div class="reading-script">
-        <h3>阅读剧本</h3>
+      <div class="recorder-instructions">
+        <p>操作指南：</p>
         <div class="step-1A">
-          Voice for Health 的愿景是通过我们的伙伴将声音生物标记技术的知名度和便利性带到世界。
-          
-          <br><br>
-          提供一款创新的线上软件解决方案，可以测量语音和大脑频率的模式，并将其转换为不同程度的身体和情感的健康。
-          
-          <br><br>
-          这核心技术源自于荷兰，结合全球不同大学的物理学、量子物理学、生物化学、表观遗传学、心理学和其他研究领域而研发的。
-          通过人工智能与大数据的结合，这软件能够将声波震动和脑电波与情感联系起来。这系统通过相关联的声音输入与大脑不同部位
-          的特定流程演算法，来识别和查明潜在的身体与情绪状况。
-          
-          
-          <br><br>
-          这软件能够测量您的情商和身体健康，并生成个性化的报告。个人情绪与身体健康是相互关联的。情绪报告显示
-          您的压力水平、情绪状态、潜意识和内在潜能。它也将显示建设性和限制性的行为、特征和个性，甚至学习和沟通感官。
-          而健康报告则显示您潜在的健康风险，以便及早管理。
-          
-          
-          <br><br>
-          客户评价1: 一个让人了解和理解自己的潜力和弱点的绝佳工具。通过这种简单及有效的方法来处理压力和放松心情。
-          
-          <br><br>
-          客户评价2: 这软件是帮助心理学家了解客户的心理过程和行为的有用工具，这对于计划或设计可以帮助客户的疗法
-          或干预措施很重要。这软件通过语音进行的思维探索获得的读数，可以作为心理健康从业者三角化客户心理的另一来源，
-          以便进行更准确的诊断。
-          
-          <br><br>
-          ***重复念阅读剧本直到进度条达到100%。
-          <br><br><br><br><br><br>
+          <h2>第一步 - 寻找安静的空间：</h2>
+          <p>- 确保关闭风扇/空调，否则会影响测试结果</p>
+          <p>- 将手机设为静音模式。</p>
+        </div>
+
+        <div class="step-2A">
+          <h2>第二步 - 录音前的准备：</h2>
+          <p>- 请使用手机的麦克风录制您的声音，而不是使用耳机！！！</p>
+          <p>- 仅当您的网络稳定时才点击“开始录音”。</p>
+        </div>
+
+        <div class="step-3A">
+          <h2>第三步 - 点击“开始录音”：</h2>
+          <p>- 将手机保持在舒适的位置，将嘴巴靠近麦克风。</p>
+          <p>
+            - 大声朗读以下阅读脚本，以您正常的说话速度，直到进度条达到100％。
+          </p>
+        </div>
+
+        <div class="step-4A">
+          <h2>第四步 - 点击“停止/重录录音”：</h2>
+          <p>- 如果您想取消录音，可以点击“停止录音”。</p>
+          <p>- 您可以通过播放器检查录音。如果您不满意，可以点击“重录录音”。</p>
+          <p>- 确认录音后，点击“下一步”。</p>
+        </div>
+
+        <div class="step-5A">
+          <h2>第五步 - 填写个人资料：</h2>
+          <p>- 请提供真实完整的信息，否则会影响我们为您提供身心健康报告。</p>
+        </div>
+
+        <div class="step-6A">
+          <h2>第六步 - 点击“上传录音”：</h2>
+          <p>- 在填写个人资料后，点击“上传录音”。</p>
+          <p>- 上传时间取决于网络速度，通常需要1-2分钟。</p>
+          <p>- 当出现“您的录音已成功上传。谢谢！”的提示时，表示上传完成。</p>
+          <p>- 我们将在48小时内与您联系。</p>
         </div>
       </div>
-    </div>
 
-    <svg class="arrow">
-      <path id="a1" d="M0 0 L15 22 L30 0"></path>  
-    </svg>
-  
-    <!--<div id="transbox_1" class="hidden">
+      <div class="mic">
+        <select name="" id="micSelect"></select>
+
+        <select id="visSelect" class="hidden">
+          <option value="frequencybars">Bar</option>
+          <option value="sinewave">Wave</option>
+          <option value="circle">Circle</option>
+        </select>
+      </div>
+
+      <div id="main-block" class="hidden">
+        <h4>个人简介</h4>
+        <form action="index.html" name="google-sheet">
+          <hr />
+          <label id="icon" for="name"><i class="fas fa-user"></i></label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Name"
+            required
+          />
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+          <input
+            type="text"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-phone"></i></label>
+          <input type="tel" name="mobile" id="mobile" required />
+
+          <br />
+          <label id="icon" for="name"><i class="fas fa-calendar"></i></label>
+          <input
+            type="text"
+            name="dob"
+            id="dob"
+            placeholder="Date of Birth (DD/MM/YYYY)"
+            required
+          />
+
+          <div class="sex">
+            <label id="icon" for="name"
+              ><i class="fas fa-venus-mars"></i
+            ></label>
+            <input type="radio" value="Male" id="male" name="gender" />
+            <label for="male" class="radio">Male</label>
+            <input type="radio" value="Female" id="female" name="gender" />
+            <label for="female" class="radio">Female</label>
+          </div>
+
+          <label id="icon" for="name"><i class="fas fa-pills"></i></label>
+          目前正在服用西药吗？          <br />
+          <div class="medicine">
+            <input type="radio" value="Yes" id="med_yes" name="med" />
+            <label for="med_yes" class="radio">Yes </label>
+            <input type="radio" value="No" id="med_no" name="med" />
+            <label for="med_no" class="radio"> No</label>
+          </div>
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-id-card"></i></label>
+          <input
+            type="text"
+            name="referral"
+            id="referral"
+            placeholder="Insert associate code (if any)"
+            required
+          />
+          <br />
+          <hr />
+        </form>
+      </div>
+
+      <div class="audio-controls">
+        <button id="submit" class="hidden">
+          上传录音 <i class="fas fa-upload"></i>
+        </button>
+        <button id="next" class="hidden">
+          下一个 <i class="fas fa-caret-square-right"></i>
+        </button>
+      </div>
+
+      <div class="audio-controls">
+        <button id="record">
+          开始录音 <i class="fas fa-microphone"></i>
+        </button>
+        <button id="stop" class="hidden">
+          停止录音 <i class="fas fa-microphone-slash"></i>
+        </button>
+        <button id="redo" class="hidden">
+          重做录音 <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+
+      <div id="viz">
+        <canvas id="analyser" width="1024" height="200" class="hidden"></canvas>
+      </div>
+
+      <div id="progress" class="hidden">
+        <div id="p_bar" class="bar" style="width: 0%">
+          <p id="p_percent" class="percent">0%</p>
+        </div>
+      </div>
+
+      <div class="audio-playback">
+        <audio id="audio" controls class="hidden"></audio>
+      </div>
+
+      <div id="script">
+        <div class="reading-script">
+          <h3>阅读剧本</h3>
+          <div class="step-1A">
+            在Voice for
+            Health，我们对人类声音的力量充满热情，不仅用于交流，还用于检测健康状况的早期迹象。通过我们的声音生物标志服务，我们能够分析声音模式，检测可能表明各种健康状况出现的微妙变化。通过您的声音输入，我们能够生成一份预防性健康报告。
+
+            <br /><br />
+            想象一下，仅仅通过分析您的声音，就能够检测呼吸系统疾病、心血管疾病甚至神经系统疾病的早期迹象。我们正在利用人工智能和机器学习的力量，分析声音数据并检测健康状况的早期预警信号，使医疗专业人员能够更早地诊断和治疗患者，最终提高生活质量。
+
+            <br /><br />
+            但这还不是全部。我们还在探索人类声音如何用于促进心理健康和福祉。我们的声音分析技术可以检测人声中微妙的变化，这些变化可能表明情绪、压力水平甚至认知功能的变化。通过分析这些声音模式，我们可以帮助人们更好地了解自己的心理健康状况，并采取积极的步骤改善福祉。
+
+            <br /><br />
+            例如，想象一下，通过声音能够早期检测出抑郁症或焦虑症的迹象，并在这些状况变得更加严重之前采取措施来管理它们。或者想象一下，通过声音来提高注意力和集中力，并增强整体认知能力。
+
+            <br /><br />
+            在Voice for
+            Health，我们致力于探索如何利用人类声音促进健康和福祉，为所有人的利益揭示人类健康的奥秘。
+            <br /><br />
+            因此，如果您有兴趣参与我们的声音分析，我们邀请您加入我们这个发现之旅。通过提供您的声音，您将使自己更好地理解声音与健康之间的关联，并为自己的健康和福祉迈出积极的一步。
+
+            <br /><br />
+            *** 最后，让我们庆祝人类声音的奇迹，并继续探索.
+            <br /><br /><br /><br /><br /><br />
+          </div>
+        </div>
+      </div>
+
+      <svg class="arrow">
+        <path id="a1" d="M0 0 L15 22 L30 0"></path>
+      </svg>
+
+      <!--<div id="transbox_1" class="hidden">
       <div class="wrapper">
         <div class="circle"></div>
         <div class="circle"></div>
@@ -194,12 +250,12 @@
         <div class="shadow"></div>
         <div class="shadow"></div>
         <div class="shadow"></div>
-        <span>处理当中...</span>
+        <span>Processing...</span>
       </div>
     </div>-->
-  </div>
+    </div>
 
-  <div id="transbox_2" class="hidden">
+    <div id="transbox_2" class="hidden">
       <div class="wrapper">
         <div class="circle"></div>
         <div class="circle"></div>
@@ -207,139 +263,177 @@
         <div class="shadow"></div>
         <div class="shadow"></div>
         <div class="shadow"></div>
-        <span>上传当中...</span>
+        <span>上传中...</span>
       </div>
     </div>
-  </div>
 
-  <script>
-    document.addEventListener("scroll", handleScroll);
-    var rootElement = document.documentElement;
+    <script>
+      const readMoreButton = document.querySelector(".read-more-button");
+      const shortVersion = document.querySelector(".short-version");
+      const fullVersion = document.querySelector(".full-version");
 
-    // function otherReferral() {
-    //   var referralOption = document.getElementById("referral").value;
+      readMoreButton.addEventListener("click", () => {
+        if (shortVersion.classList.contains("hidden")) {
+          // "Read More" was clicked
+          readMoreButton.textContent = "Read More";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        } else {
+          // "Read Less" was clicked
+          readMoreButton.textContent = "Read Less";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        }
+      });
 
-    //   if (referralOption == "Other") {
-    //     $("#oth_referral").removeClass("hidden");
-    //   }
-    //   else {
-    //     $("#oth_referral").addClass("hidden");
-    //   }
-    // }
-
-    function handleScroll() {
-      // Do something on scroll
-      var scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
-      if (rootElement.scrollTop / scrollTotal > 0.95) {
-        // Show button
-        document.getElementById("a1").classList.add("hidden");
-      } else if (rootElement.scrollTop / scrollTotal < 0.9) {
-        // Hide button
-        document.getElementById("a1").classList.remove("hidden");
+      function scrollToSection() {
+        var section = document.getElementById("recorder-instructions");
+        section.scrollIntoView({ behavior: "smooth" });
       }
-    }
 
-    function fnBrowserDetect() {
-      var parser = new UAParser();
-      var browserName = Object.values(parser.getResult().browser)[0].toLowerCase();      
-      var os = Object.values(parser.getResult().os)[0].toLowerCase();
-      var ver = Object.values(parser.getResult().os)[1].toLowerCase();
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
 
-      //document.querySelector("h1").innerText = os +" "+parseInt(ver);
-      
-      /*if ((browserName.match(/edge/i))||(browserName.match(/chrome/i))||(browserName.match(/webview/i))) {     
+      document.addEventListener("scroll", handleScroll);
+      var rootElement = document.documentElement;
+
+      // function otherReferral() {
+      //   var referralOption = document.getElementById("referral").value;
+
+      //   if (referralOption == "Other") {
+      //     $("#oth_referral").removeClass("hidden");
+      //   }
+      //   else {
+      //     $("#oth_referral").addClass("hidden");
+      //   }
+      // }
+
+      function handleScroll() {
+        // Do something on scroll
+        var scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+        if (rootElement.scrollTop / scrollTotal > 0.95) {
+          // Show button
+          document.getElementById("a1").classList.add("hidden");
+        } else if (rootElement.scrollTop / scrollTotal < 0.9) {
+          // Hide button
+          document.getElementById("a1").classList.remove("hidden");
+        }
+      }
+
+      function fnBrowserDetect() {
+        var parser = new UAParser();
+        var browserName = Object.values(
+          parser.getResult().browser
+        )[0].toLowerCase();
+        var os = Object.values(parser.getResult().os)[0].toLowerCase();
+        var ver = Object.values(parser.getResult().os)[1].toLowerCase();
+
+        //document.querySelector("h1").innerText = browserName;
+
+        /*if ((browserName.match(/edge/i))||(browserName.match(/chrome/i))||(browserName.match(/webview/i))) {        
         $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Firefox, Safari, QQ or WeChat.";
-        alert('对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Firefox, Safari, QQ or WeChat.')
+        //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+        alert('Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.')
         location.replace("https://"+window.location.hostname)
       }*/
 
-      if (browserName.match(/webview/i)) {     
-        $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Firefox, Safari, QQ or WeChat.";
-        alert('对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Chrome, Firefox, Safari, QQ or WeChat.')
-        location.replace("https://"+window.location.hostname)
-      }
-      
-      if ((os.match(/android/i))&&(parseInt(ver)<10)) {        
-        $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "对不起，您的Android版本不支持!\n目前系统支持Android版本10.0及以上。";
-        alert('对不起，您的Android版本不支持!\n目前系统支持Android版本10.0及以上。')
-        location.replace("https://"+window.location.hostname)
-      }
-
-      if ((os.match(/mac os/i))&&(parseInt(ver)<10)) {        
-        $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "对不起，您的Mac OS版本不支持!\n目前系统支持Mac OS版本10及以上。";
-        alert('对不起，您的Mac OS版本不支持!\n目前系统支持Mac OS版本10及以上。')
-        location.replace("https://"+window.location.hostname)
-      }
-
-      if ((os.match(/ios/i))&&(parseInt(ver)<14)) {        
-        $("#MAIN").addClass("hidden")
-        //document.querySelector("h1").innerText = "对不起，您的iOS版本不支持!\n目前系统支持iOS版本14及以上。";
-        alert('对不起，您的iOS版本不支持!\n目前系统支持iOS版本14及以上。')
-        location.replace("https://"+window.location.hostname)
-      }
-
-      //Get/Set associate code
-      let a_code = getCookie("assoc_code");
-      const url = window.location.href
-      console.log(url);
-      console.log(a_code)
-
-      const urlParams = new URLSearchParams(window.location.search);
-      
-      if (urlParams.has('rf')) {
-        const rf = urlParams.get('rf')
-        console.log(rf);
-        setCookie("assoc_code", rf, 365);
-        document.getElementById('referral').value = rf;
-        document.getElementById('referral').readOnly = true;
-        console.log("1");
-      }
-      else if (a_code != "") {
-        setCookie("assoc_code", a_code, 365);
-        document.getElementById('referral').value = a_code;
-        document.getElementById('referral').readOnly = true;
-        console.log("2");
-      }
-      else {                   
-        console.log("3");
-      }
-    }
-
-    function setCookie(cname, cvalue, exdays) {
-      const d = new Date();
-      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-      let expires = "expires=" + d.toUTCString();
-      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
-    function getCookie(cname) {
-      let name = cname + "=";
-      let decodedCookie = decodeURIComponent(document.cookie);
-      let ca = decodedCookie.split(';');
-      for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
+        if (browserName.match(/webview/i)) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+          alert(
+            "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Chrome, Firefox, Safari, QQ or WeChat."
+          );
+          location.replace("https://" + window.location.hostname);
         }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
+
+        if (os.match(/android/i) && parseInt(ver) < 10) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above.";
+          alert(
+            "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        if (os.match(/mac os/i) && parseInt(ver) < 10) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above.";
+          alert(
+            "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        if (os.match(/ios/i) && parseInt(ver) < 14) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above.";
+          alert(
+            "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        //Get/Set associate code
+        let a_code = getCookie("assoc_code");
+        const url = window.location.href;
+        console.log(url);
+        console.log(a_code);
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has("rf")) {
+          const rf = urlParams.get("rf");
+          console.log(rf);
+          setCookie("assoc_code", rf, 365);
+          document.getElementById("referral").value = rf;
+          document.getElementById("referral").readOnly = true;
+          console.log("1");
+        } else if (a_code != "") {
+          setCookie("assoc_code", a_code, 365);
+          document.getElementById("referral").value = a_code;
+          document.getElementById("referral").readOnly = true;
+          console.log("2");
+        } else {
+          console.log("3");
         }
       }
-      return "";
-    }    
-  </script>
 
-  <script src="zh/mobile_script.js"></script>
-  <script src="zh/script_zh.js"></script>
-  <script src="zh/wave-resampler.js"></script>
-  <script src="zh/jquery.min.js"></script>
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
-  <script src="https://unpkg.com/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js"></script>
-</body>
+      function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
 
+      function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == " ") {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+    </script>
+
+    <script src="./zh/mobile_script.js"></script>
+    <script src="./zh/script_zh.js"></script>
+    <script src="./zh/wave-resampler.js"></script>
+    <script src="./zh/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="https://unpkg.com/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js"></script>
+  </body>
 </html>

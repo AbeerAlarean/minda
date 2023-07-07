@@ -434,7 +434,7 @@ input[type=password] {
     bottom: 0%;    
     left: 50%;
     transform: translate(-50%, -50%);
-    
+    z-index:999;
     font-weight: bold;    
     overflow:hidden;
     background:#000000;
