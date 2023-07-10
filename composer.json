@@ -1,0 +1,14 @@
+{
+    "require": {
+        "google/apiclient": "^2.0",
+        "google/apiclient-services": "^0.295.0",
+        "google/auth": "^1.26"
+    },
+    "scripts": {
+        "pre-autoload-dump": "Google\\Task\\Composer::cleanup"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Drive"]
+    }
+}

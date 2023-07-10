@@ -19,14 +19,14 @@ let data_view_LR = null;
   let AudioContext = window.AudioContext || window.webkitAudioContext;
   let context = null;
   let analyser = null;
-  let canvas = document.querySelector('canvas');
+  let canvas = document.querySelector("canvas");
   let canvasCtx = canvas.getContext("2d");
-  let visualSelect = document.querySelector('#visSelect');
-  let micSelect = document.querySelector('#micSelect');
+  let visualSelect = document.querySelector("#visSelect");
+  let micSelect = document.querySelector("#micSelect");
   let stream = null;
   let tested = false;
   let new_sampleRate = 44100;
-  let min_duration = 210;
+  let min_duration = 230;
   let HP_filter = false;
   let delay = 0;
 
@@ -34,14 +34,21 @@ let data_view_LR = null;
   recordButton = document.getElementById("record");
   recordButton.addEventListener("click", start);
 
+  //retryUploading
+  retryUploading = document.getElementById("retry");
+  retryUploading.addEventListener("click", submit);
+
   // stop recording
   stopButton = document.getElementById("stop");
   stopButton.addEventListener("click", stop);
 
   // redo recording
-  redoButton = document.getElementById("redo");
-  redoButton.addEventListener("click", redo);
-
+  const redoButton = document.getElementById("redo");
+  redoButton.addEventListener("click", function () {
+    if (confirm("您确定要重做录音吗？")) {
+      redo();
+    }
+  });
   // next
   nextButton = document.getElementById("next");
   nextButton.addEventListener("click", next);
@@ -50,29 +57,32 @@ let data_view_LR = null;
   submitButton = document.getElementById("submit");
   submitButton.addEventListener("click", submit);
 
-  try {
-    window.stream = stream = await getStream();
-    console.log('Got stream');
-  }
-  catch (err) {
-    alert('您的麦克风好像出了点问题!\n\n 请检查麦克风的设置。', err);
-    $("#MAIN").addClass("hidden")
-    //document.querySelector("h1").innerText = "对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Firefox, Safari, QQ or WeChat.";
-    alert('对不起，这系统不支持您的浏览器!\n 为了获得最佳体验，请使用以下支持的浏览器:\n Chrome, Firefox, Safari, QQ or WeChat.');
-    location.replace("https://"+window.location.hostname)
-  }
+  //   try {
+  //     window.stream = stream = await getStream();
+  //     console.log("Got stream");
+  //   } catch (err) {
+  //     alert(
+  //       "There is something wrong with your microphone!\n\n Please check your microphone setting.",
+  //       err
+  //     );
+  //     $("#MAIN").addClass("hidden");
+  //     //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+  //     alert(
+  //       "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Chrome, Firefox, Safari, QQ or WeChat."
+  //     );
+  //     location.replace("https://" + window.location.hostname);
+  //   }
 
   const deviceInfos = await navigator.mediaDevices.enumerateDevices();
 
   var mics = [];
   for (let i = 0; i !== deviceInfos.length; ++i) {
     let deviceInfo = deviceInfos[i];
-    if (deviceInfo.kind === 'audioinput') {
+    if (deviceInfo.kind === "audioinput") {
       mics.push(deviceInfo);
-      let label = deviceInfo.label ||
-        'Microphone ' + mics.length;
-      console.log('Mic ', label + ' ' + deviceInfo.deviceId)
-      const option = document.createElement('option')
+      let label = deviceInfo.label || "Microphone " + mics.length;
+      console.log("Mic ", label + " " + deviceInfo.deviceId);
+      const option = document.createElement("option");
       option.value = deviceInfo.deviceId;
       option.text = label;
       micSelect.appendChild(option);
@@ -93,7 +103,7 @@ let data_view_LR = null;
     // creates a gain node
     volume = context.createGain();
 
-    // creates an audio node from teh microphone incoming stream
+    // creates an audio node from the microphone incoming stream
     audioInput = context.createMediaStreamSource(stream);
 
     // Create analyser
@@ -102,14 +112,8 @@ let data_view_LR = null;
     // connect audio input to the analyser
     audioInput.connect(analyser);
 
-    // connect analyser to the volume control
-    // analyser.connect(volume);
-
     let bufferSize = 4096;
     let recorder = context.createScriptProcessor(bufferSize, 2, 2);
-
-    // we connect the volume control to the processor
-    // volume.connect(recorder);
 
     analyser.connect(recorder);
 
@@ -117,7 +121,7 @@ let data_view_LR = null;
     recorder.connect(context.destination);
 
     recorder.onaudioprocess = function (e) {
-      // Check 
+      // Check
       if (!recording) return;
       // Do something with the data, i.e Convert this to WAV
 
@@ -128,49 +132,50 @@ let data_view_LR = null;
         tested = true;
         // if this reduces to 0 we are not getting any sound
         if (!left.reduce((a, b) => a + b)) {
-          alert("您的麦克风好像出了点问题!\n\n 请检查麦克风的设置。");
+          alert(
+            "您的麦克风有问题！\n\n请检查您的麦克风设置。"
+          );
           // clean up;
           // stop();
           stream.getTracks().forEach(function (track) {
             track.stop();
           });
           context.close();
-          $("#MAIN").addClass("hidden")
-          //document.querySelector("h1").innerText = "您的麦克风在浏览器设置中已静音!\n请复制以下连结，并以其他浏览器打开\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://recording.minda.my";
-          alert('您的麦克风在浏览器设置中已静音!');
-          location.replace("https://"+window.location.hostname)
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Your microphone is muted in the browser settings!\nPlease copy the below link and open it with other browsers\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://voiceforhealth.online";
+          alert("您的麦克风在浏览器设置中已静音");
+          location.replace("https://" + window.location.hostname);
         }
       }
 
       if (HP_filter) {
         // we clone the samples
         leftchannel.push(new Float64Array(left));
-        // rightchannel.push(new Float64Array(right));
         recordingLength += bufferSize;
         dataLength += bufferSize;
-        duration_p = parseInt(dataLength / 48000 / min_duration * 100);
+        duration_p = parseInt((dataLength / 48000 / min_duration) * 100);
 
         document.getElementById("p_bar").style.width = duration_p + "%";
-        document.getElementById("p_percent").innerHTML = duration_p + '%';
+        document.getElementById("p_percent").innerHTML = duration_p + "%";
         delay = 0;
 
         if (duration_p >= 100) {
-          stop()
+          stop();
         }
-      }
-      else {
+      } else {
         if (parseInt(delay / 48000) <= 0.5) {
           left.forEach((elem, i) => {
             left[i] = 0;
-          })
+          });
           leftchannel.push(new Float64Array(left));
           recordingLength += bufferSize;
         }
-        delay += bufferSize
+        delay += bufferSize;
       }
     };
+
     visualize();
-  };
+  }
 
   // Visualizer function from
   // https://webaudiodemos.appspot.com/AudioRecorder/index.html
@@ -190,30 +195,27 @@ let data_view_LR = null;
 
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-
-
     var drawAlt = function () {
       drawVisual = requestAnimationFrame(drawAlt);
       analyser.getByteFrequencyData(dataArrayAlt);
-      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+      canvasCtx.fillStyle = "rgb(0, 0, 0)";
       canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      var barWidth = (WIDTH / bufferLengthAlt);
+      var barWidth = WIDTH / bufferLengthAlt;
       var barHeight;
       var x = 0;
 
       if (Math.abs(dataArrayAlt.reduce((a, b) => a + b)) > 7500) {
         HP_filter = true;
-      }
-      else {
+      } else {
         HP_filter = false;
       }
-
 
       for (var i = 0; i < bufferLengthAlt; i++) {
         barHeight = dataArrayAlt[i];
 
-        canvasCtx.fillStyle = "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
+        canvasCtx.fillStyle =
+          "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
         canvasCtx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
         x += barWidth + 1;
       }
@@ -221,42 +223,52 @@ let data_view_LR = null;
     drawAlt();
   }
 
-  function start() {
-    alert(' 注意：\n- 务必找一个安静的空间，关掉风扇/冷气机。\n- 把手机调为静音模式。\n- 此阅读剧本共有5段，请以正常的语速大声地朗读，直到进度条达到100%。');
-    setUpRecording();
-    recordButton.disabled = true;
-    recordButton.innerHTML = '录音进行中 <i class="fa fa-spinner fa-spin"></i>'
-    // $("#record").addClass("button-animate");
+  async function start() {
+    alert(
+      " 注意：\n- 请务必找到一个安静的空间，并关闭风扇/空调。\n- 将手机调至静音模式。\n- 阅读脚本旨在提供理解和收集声音的指导。 \n- 您可以以正常速度大声朗读，直到进度条达到 100%。"
+    );
 
-    $("#stop").removeClass("hidden");
-    stopButton.disabled = false;
+    try {
+      // Get the media stream with the selected microphone
+      stream = await getStream({
+        audio: { deviceId: micSelect.value },
+        video: false,
+      });
+      console.log("Got stream with selected microphone");
 
-    $("#analyser").removeClass("hidden");
-    $("#progress").removeClass("hidden");
+      // Update the recording setup with the new stream
+      setUpRecording(stream);
 
-    if (!$("#audio").hasClass("hidden")) {
-      $("#audio").addClass("hidden")
-    };
+      recordButton.disabled = true;
+      recordButton.innerHTML =
+        '录音正在进行中 <i class="fa fa-spinner fa-spin"></i>';
+      $("#stop").removeClass("hidden");
+      stopButton.disabled = false;
+      $("#analyser").removeClass("hidden");
+      $("#progress").removeClass("hidden");
+      $("#audio").addClass("hidden");
+      $("#submit").addClass("hidden");
+      $("#redo").addClass("hidden");
+      $("#next").addClass("hidden");
+      $("#transbox_2").addClass("hidden");
 
-    if (!$("#submit").hasClass("hidden")) {
-      $("#submit").addClass("hidden")
-    };
+      const element = document.getElementById("record");
+      element.scrollIntoView(true);
+      recording = true;
 
-    const element = document.getElementById("record");
-    element.scrollIntoView(true);
-    recording = true;
-
-    // reset the buffers for the new recording
-    // leftchannel.length = rightchannel.length = 0;
-    leftchannel.length = 0;
-    recordingLength = 0;
-    if (!context) setUpRecording();
+      leftchannel.length = 0;
+      recordingLength = 0;
+    } catch (error) {
+      console.error("Failed to get stream with selected microphone:", error);
+      // Handle error as per your requirements
+    }
   }
 
   function stop() {
     $("#record").addClass("hidden");
     stopButton.disabled = true;
-    stopButton.innerHTML = '处理当中... <i class="fa fa-spinner fa-spin"></i>'
+    stopButton.innerHTML =
+      'Processing... <i class="fa fa-spinner fa-spin"></i>';
     $("#script").addClass("hidden");
     $("#analyser").addClass("hidden");
     $("#progress").addClass("hidden");
@@ -270,33 +282,36 @@ let data_view_LR = null;
       // we interleave both channels together
       // let interleaved = interleave(leftBuffer, rightBuffer);
 
-      data_view_L = exportWAV(leftBuffer, 0.65)
+      data_view_L = exportWAV(leftBuffer, 0.65);
       // data_view_R = exportWAV(rightBuffer, 1)
-      // data_view_LR = exportWAV(interleaved, 1)      
+      // data_view_LR = exportWAV(interleaved, 1)
       // our final binary blob
-      const blob = new Blob([data_view_L], { type: 'audio/wav' });
+      const blob = new Blob([data_view_L], { type: "audio/wav" });
       const audioUrl = URL.createObjectURL(blob);
-      document.querySelector('#audio').setAttribute('src', audioUrl);
+      document.querySelector("#audio").setAttribute("src", audioUrl);
 
-      console.log('Stop')
+      console.log("Stop");
       $("#stop").addClass("hidden");
       $("#audio").removeClass("hidden");
-      stopButton.innerHTML = '停止录音 <i class="fas fa-microphone-slash"></i>'
+      stopButton.innerHTML =
+        'Stop Recording <i class="fas fa-microphone-slash"></i>';
       $("#redo").removeClass("hidden");
-      $("#next").removeClass("hidden");      
+      $("#next").removeClass("hidden");
       //$("#transbox_1").addClass("hidden");
       document.getElementById("next").scrollIntoView(true);
     }, 500);
 
     var duration = parseInt(recordingLength / 48000);
     if (duration < min_duration) {
-      alert('你的录音时长太短。请重新录音。\n\n请以正常速度大声朗读此阅读剧本, 直到进度条达到100%。');
+      alert(
+        "您的录音时间太短，请重新录音。\n\n以正常速度朗读脚本，直到进度条达到100%。"
+      );
       redo();
     }
   }
 
   function redo() {
-    window.location.reload()
+    window.location.reload();
   }
 
   function next() {
@@ -326,11 +341,11 @@ let data_view_LR = null;
     let view = new DataView(buffer);
 
     // RIFF chunk descriptor
-    writeUTFBytes(view, 0, 'RIFF');
+    writeUTFBytes(view, 0, "RIFF");
     view.setUint32(4, 36 + dataBuffer.length * 2, true);
-    writeUTFBytes(view, 8, 'WAVE');
+    writeUTFBytes(view, 8, "WAVE");
     // FMT sub-chunk
-    writeUTFBytes(view, 12, 'fmt ');
+    writeUTFBytes(view, 12, "fmt ");
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true);
     view.setUint16(22, 1, true);
@@ -339,7 +354,7 @@ let data_view_LR = null;
     view.setUint16(32, 2, true);
     view.setUint16(34, 16, true);
     // data sub-chunk
-    writeUTFBytes(view, 36, 'data');
+    writeUTFBytes(view, 36, "data");
     view.setUint32(40, dataBuffer.length * 2, true);
 
     // write the PCM samples
@@ -347,7 +362,7 @@ let data_view_LR = null;
     let index = 44;
     let volume = gain;
     for (let i = 0; i < lng; i++) {
-      view.setInt16(index, dataBuffer[i] * (0x7FFF * volume), true);
+      view.setInt16(index, dataBuffer[i] * (0x7fff * volume), true);
       index += 2;
     }
 
@@ -355,7 +370,7 @@ let data_view_LR = null;
     //   var s = Math.max(-1, Math.min(1, dataBuffer[i]));
     //   view.setInt16(index, s < 0 ? s * 0x8000 : s * (0x7FFF * volume), true);
     // }
-    return view
+    return view;
   }
 
   function interleave(leftChannel, rightChannel) {
@@ -379,102 +394,174 @@ let data_view_LR = null;
   }
 
   function submit() {
-    var name = document.getElementById("name").value.length
-    var email = document.getElementById("email").value.length
-    var mobile = document.getElementById("mobile").value.length
-    var dob = document.getElementById("dob").value.length
+    var name = document.getElementById("name").value.length;
+    var email = document.getElementById("email").value.length;
+    var mobile = document.getElementById("mobile").value.length;
+    var dob = document.getElementById("dob").value.length;
     var male = document.getElementById("male").checked;
     var female = document.getElementById("female").checked;
-    var med_yes = document.getElementById("med_yes").checked
-    var med_no = document.getElementById("med_no").checked
-    var v_email = ValidateEmail(document.getElementById("email").value.trim())
-    var v_mobile = phonenumber(document.getElementById("mobile").value.trim())
-    var v_dob = ValidateDOB(document.getElementById("dob").value.trim())
+    var med_yes = document.getElementById("med_yes").checked;
+    var med_no = document.getElementById("med_no").checked;
+    var v_email = ValidateEmail(document.getElementById("email").value.trim());
+    var v_mobile = phonenumber(document.getElementById("mobile").value.trim());
+    var v_dob = ValidateDOB(document.getElementById("dob").value.trim());
     var duration = parseInt(recordingLength / 48000);
 
-    if (name > 0 && v_email && v_mobile && v_dob && (male || female) && (med_yes || med_no) && duration >= min_duration) {
+    if (
+      name > 0 &&
+      v_email &&
+      v_mobile &&
+      v_dob &&
+      (male || female) &&
+      (med_yes || med_no) &&
+      duration >= min_duration
+    ) {
       submitButton.disabled = true;
-      submitButton.innerHTML = '上传当中 <i class="fa fa-spinner fa-spin"></i>'
+      submitButton.innerHTML =
+        'Uploading <i class="fa fa-spinner fa-spin"></i>';
       $("#redo").addClass("hidden");
       $("#audio").addClass("hidden");
       $("#transbox_2").removeClass("hidden");
 
       var timestamp = new Date();
-      var date = timestamp.toISOString().slice(0, 10).trim()
-      var time = timestamp.toLocaleString("en-US", { hour12: false }, { timeZone: "Asia/Kuala_Lumpur" }).split(",")[1].trim()
-      var name = document.getElementById("name").value
-      var email = document.getElementById("email").value.trim()
-      var mobile = document.getElementById("mobile").value.trim()
-      var dob = document.getElementById("dob").value.replaceAll('/', '-').trim()
-      var gender = ""
-      var medication = ""
-      var referral = "Ser.Brandon"
+      var date = timestamp.toISOString().slice(0, 10).trim();
+      var time = timestamp
+        .toLocaleString(
+          "en-US",
+          { hour12: false },
+          { timeZone: "Asia/Kuala_Lumpur" }
+        )
+        .split(",")[1]
+        .trim();
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value.trim();
+      var mobile = document.getElementById("mobile").value.trim();
+      var dob = document
+        .getElementById("dob")
+        .value.replaceAll("/", "-")
+        .trim();
+      var gender = "";
+      var medication = "";
+      var referral = "Ser.Brandon";
 
       if (male) {
-        gender = "M"
-      }
-      else {
-        gender = "F"
+        gender = "M";
+      } else {
+        gender = "F";
       }
 
       if (med_yes) {
-        medication = "Y"
-      }
-      else {
-        medication = "N"
+        medication = "Y";
+      } else {
+        medication = "N";
       }
 
       var parser = new UAParser();
       // console.log(parser.getResult());
       var browser = Object.values(parser.getResult().browser)[0];
-      var os = Object.values(parser.getResult().os)[0] + " " + Object.values(parser.getResult().os)[1];
+      var os =
+        Object.values(parser.getResult().os)[0] +
+        " " +
+        Object.values(parser.getResult().os)[1];
       var model = Object.values(parser.getResult().device)[0];
       var type = Object.values(parser.getResult().device)[1];
       var vendor = Object.values(parser.getResult().device)[2];
       var cpu = Object.values(parser.getResult().cpu)[0];
 
-      filename = date + "," + time + "," + name + "," + email + "," + mobile + "," + dob + "," + gender + "," + medication + "," + sampleRate + "," + browser + "," + os + "," + model + "," + type + "," + vendor + "," + cpu + "," + referral
-      file_L = new File([data_view_L], filename + ",ZH" + '.wav', { type: "audio/wav" });
+      filename =
+        date +
+        "," +
+        time +
+        "," +
+        name +
+        "," +
+        email +
+        "," +
+        mobile +
+        "," +
+        dob +
+        "," +
+        gender +
+        "," +
+        medication +
+        "," +
+        sampleRate +
+        "," +
+        browser +
+        "," +
+        os +
+        "," +
+        model +
+        "," +
+        type +
+        "," +
+        vendor +
+        "," +
+        cpu +
+        "," +
+        referral;
+      file_L = new File([data_view_L], filename + ",zh" + ".wav", {
+        type: "audio/wav",
+      });
 
-      uploadFile(file_L, filename)
+      var data = {
+        date: date,
+        time: time,
+        name: name,
+        email: email,
+        mobile: mobile,
+        dob: dob,
+        gender: gender,
+        medication: medication,
+        sampleRate: sampleRate,
+        browser: browser,
+        os: os,
+        model: model,
+        type: type,
+        vendor: vendor,
+        cpu: cpu,
+        referral: referral,
+      };
+      var jsonData = JSON.stringify(data);
+      uploadFile(file_L, filename + ",zh" + ".wav", jsonData);
 
-      // document.getElementById("name").value = ""
-      // document.getElementById("email").value = ""
-      // document.getElementById("mobile").value = ""
-      // document.getElementById("dob").value = ""
-      // document.getElementById("male").checked = false
-      // document.getElementById("female").checked = false
-      // document.getElementById("med_yes").checked = false
-      // document.getElementById("med_no").checked = false
-    }
+      //dummey data
 
-    else if (duration < min_duration) {
-      alert('你的录音时长太短。请重新录音。\n\n请以正常速度大声朗读此阅读剧本两遍。大约需要 4 分钟。');
+      //  document.getElementById("name").value = "abdul"
+      //  document.getElementById("email").value = "email@server.com"
+      //  document.getElementById("mobile").value = "+601160503498"
+      //  document.getElementById("dob").value = "12/12/1999"
+      //  document.getElementById("male").checked = false
+      //  document.getElementById("female").checked = false
+      //  document.getElementById("med_yes").checked = false
+      //  document.getElementById("med_no").checked = false
+    } else if (duration < min_duration) {
+      alert(
+        "您的录音时间太短，请重新录音。\n\n以正常速度朗读脚本，直到进度条达到100%。"
+      );
       document.getElementById("record").scrollIntoView(true);
-      redo()
-    }
-    else if (name < 1) {
-      alert('请提供姓名!');
+      redo();
+    } else if (name < 1) {
+      alert("请提供您的姓名！");
       document.getElementById("name").scrollIntoView(true);
-    }
-    else if (!v_email) {
-      alert('请检查并提供您的实际电邮，以确保可以收到报告。');
+    } else if (!v_email) {
+      alert(
+        "请检查并提供您的实际电子邮件地址，以确保收到报告。"
+      );
       document.getElementById("email").scrollIntoView(true);
-    }
-    else if (!v_mobile) {
-      alert('请提供真实的手机号码! (包含+国家代码)\n例子：+XX-XXXXXXXXX');
+    } else if (!v_mobile) {
+      alert(
+        "请提供真实手机号码！ （包括+国家代码）\n 示例：+XX-XXXXXXXXX"
+      );
       document.getElementById("mobile").scrollIntoView(true);
-    }
-    else if (!v_dob) {
-      alert("请以 DD/MM/YYYY 的格式输入您的出生日期")
+    } else if (!v_dob) {
+      alert("Masukkan tarikh lahir anda dalam format DD/MM/YYYY SAHAJA.");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!male && !female) {
-      alert('请选择性别!');
+    } else if (!male && !female) {
+      alert("Please select gender!");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!med_yes && !med_no) {
-      alert('请选择是否有服用药物!');
+    } else if (!med_yes && !med_no) {
+      alert("Sila pilih sama ada anda sedang mengambil sebarang ubat!");
       document.getElementById("dob").scrollIntoView(true);
     }
   }
@@ -484,8 +571,8 @@ let data_view_LR = null;
     visualize();
   };
 
-  micSelect.onchange = async e => {
-    console.log('now use device ', micSelect.value);
+  micSelect.onchange = async (e) => {
+    console.log("now use device ", micSelect.value);
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
@@ -493,15 +580,16 @@ let data_view_LR = null;
 
     stream = await getStream({
       audio: {
-        deviceId: { exact: micSelect.value }
-      }, video: false
+        deviceId: { exact: micSelect.value },
+      },
+      video: false,
     });
     setUpRecording();
-  }
+  };
 
   function pause() {
     recording = false;
-    context.suspend()
+    context.suspend();
   }
 
   function resume() {
@@ -513,8 +601,7 @@ let data_view_LR = null;
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (inputText.match(mailformat)) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -525,17 +612,16 @@ let data_view_LR = null;
     //Check whether valid dd/MM/yyyy Date Format.
     if (regex.test(inputText)) {
       //Test which seperator is used '/' or '-'
-      var opera1 = inputText.split('/');
-      var opera2 = inputText.split('-');
+      var opera1 = inputText.split("/");
+      var opera2 = inputText.split("-");
       lopera1 = opera1.length;
       lopera2 = opera2.length;
 
       // Extract the string into month, date and year
       if (lopera1 > 1) {
-        var pdate = inputText.split('/');
-      }
-      else if (lopera2 > 1) {
-        var pdate = inputText.split('-');
+        var pdate = inputText.split("/");
+      } else if (lopera2 > 1) {
+        var pdate = inputText.split("-");
       }
 
       var dd = parseInt(pdate[0]);
@@ -547,9 +633,7 @@ let data_view_LR = null;
       if (mm == 1 || mm > 2) {
         if (dd > ListofDays[mm - 1]) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
 
       if (mm == 2) {
@@ -558,90 +642,222 @@ let data_view_LR = null;
           lyear = true;
         }
 
-        if ((lyear == false) && (dd >= 29)) {
+        if (lyear == false && dd >= 29) {
           return false;
-        }
-        else if ((lyear == true) && (dd > 29)) {
+        } else if (lyear == true && dd > 29) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   function phonenumber(inputtxt) {
     if (isValidNumber(inputtxt)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   // Number will be with country code
   function isValidNumber(number) {
     try {
-      return new libphonenumber.parsePhoneNumber(number).isValid()
+      return new libphonenumber.parsePhoneNumber(number).isValid();
     } catch (error) {
-      return false
+      return false;
     }
   }
-})()
+})();
 
-async function uploadFile(file, fName) {
-  let formData = new FormData();
-  formData.append("file", file);
+function uploadFile(file, fName, jsonData) {
+  const formData = new FormData();
+  formData.append("file", file, fName);
 
-  try {
-    $.ajax({
-      url: "https://hook.eu1.make.com/8l7hwzifmqw3bb8k353yv8j92nlthkta",
-      method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",ZH.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
+  const xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener("progress", (event) => {
+    if (event.lengthComputable) {
+      const progress = Math.round((event.loaded * 100) / event.total);
+      updateProgressBar(progress);
+    }
+  });
+
+  xhr.addEventListener("load", async () => {
+    if (xhr.status === 200) {
+      // Upload successful
+      const jsonResponse = JSON.parse(xhr.responseText);
+      console.log(jsonResponse);
+      handleUploadSuccess(jsonData)
+      updateProgressBar(progress);
+
+    } else {
+      // Upload failed
+      console.error("Failed to upload file.");
+    handleUploadError();
+    }
+  });
+
+  xhr.addEventListener("error", () => {
+    console.error("Upload error.");
+    // Error handling code...
+  });
+
+  xhr.open("POST", "upload.php");
+  xhr.send(formData);
+}
+
+function handleUploadSuccess(jsonData) {
+  showAlert(
+    "您的录音已成功上传。\n我们会尽快与您联系。谢谢！",
+    "success"
+  );
+
+  // Submit jsonData to another endpoint
+  fetch("https://hook.eu1.make.com/nl5e2s4hwfh807g76y1pabns3oxf9nrp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: jsonData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("JSON data submitted successfully.");
+        startCountdown();
+      } else {
+        console.error("Failed to submit JSON data.");
+        hideTransBox();
+      }
+    })
+    .catch((error) => {
+      console.error("Failed to submit JSON data.", error);
     });
 
-    await fetch('upload.php', {
-      method: "POST",
-      body: formData
-    });
-    
-    $.ajax({
-      url: "https://hook.eu1.make.com/vlw96phpwf8146ndgjvabcsi5v8wzxzf",
-      method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",ZH.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
-    });
+  hideLoader(); // Hide loading indicator
+  enableSubmitButton(); // Enable submit button
+}
 
-    alert('您的录音上传成功。\n我们将会尽快联系您。谢谢！');
+function startCountdown() {
+  let countdownElement = document.getElementById("countdown-timer");
+  let countdownTime = 10; // Countdown time in seconds
 
-    $("#transbox_2").addClass("hidden");
-    $("#record").removeClass("inactive");
-    recordButton.disabled = false;
+  // Display the initial countdown value
+  countdownElement.innerText = countdownTime;
 
-    $("#submit").addClass("hidden");
-    submitButton.disabled = true;
-    submitButton.innerText = "Submit"
+  // Start the countdown interval
+  let countdownInterval = setInterval(() => {
+    countdownTime--;
 
-    setTimeout(function () {
-      location.replace("https://www.voiceforhealth.online/")
-    }, 1000);
-  } catch (error) {
-    alert('上传录音失败。\n请确保您有一个稳定的网络，并重新上传录音。')
-    submitButton.disabled = false;
-    submitButton.innerHTML = '上传录音 <i class="fas fa-upload"></i>'
-    $("#transbox_2").addClass("hidden");
+    // Update the countdown value
+    countdownElement.innerText = countdownTime;
+
+    // Check if the countdown reaches 0
+    if (countdownTime === 0) {
+      // Redirect to the home page
+      window.location.href = "/";
+
+      // Clear the countdown interval
+      clearInterval(countdownInterval);
+    }
+  }, 1000); // Update the countdown every 1 second
+}
+function handleUploadError() {
+  showTransBox();
+  showAlert(
+    "无法上传您的录音。\n请确保您有稳定的互联网并重新上传录音。",
+    "error"
+  );
+
+  //   enableSubmitButton(); // Enable submit button
+  setTimeout(function () {
+    showRetry();
+    hideTransBox();
+    showRedo();
+    hideSubmitButton();
+  }, 5000);
+}
+
+function updateProgressBar(progress) {
+  const progressBar = document.getElementById("upload-progress");
+  progressBar.style.width = `${progress}%`;
+}
+
+function showAlert(message, type) {
+  const loading = document.getElementById("loading");
+  loading.style.display = "none";
+  console.log("hide wrapper....");
+  const alertBox = document.getElementById("alert-box");
+  alertBox.innerText = message;
+  alertBox.className = `alert-${type}`;
+
+  alertBox.style.display = "block";
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "none";
+}
+
+function enableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = false;
+  submitButton.innerHTML = 'Upload Recording <i class="fas fa-upload"></i>';
+}
+
+function handleUploadProgress(event) {
+  if (event.lengthComputable) {
+    const percentComplete = (event.loaded / event.total) * 100;
+    updateProgressBar(percentComplete);
   }
+}
+function showTransBox() {
+  const transBox2 = document.getElementById("transbox_2");
+  transBox2.style.display = "block";
+}
+
+function hideTransBox() {
+  const transBox2 = document.getElementById("transbox_2");
+  transBox2.style.display = "none";
+}
+
+function hideAlert() {
+  const alertBox = document.getElementById("alert-box");
+  alertBox.style.display = "none";
+  alertBox.classList.remove("success", "error");
+}
+
+function showLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "block";
+}
+function showRetry() {
+  const retry = document.getElementById("retry");
+  $("#retry").removeClass("hidden");
+}
+function showRedo() {
+  const redo = document.getElementById("redo");
+  $("#redo").removeClass("hidden");
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "none";
+}
+
+function disableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = true;
+  submitButton.innerHTML = 'Uploading <i class="fa fa-spinner fa-spin"></i>';
+}
+function hideSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.style.display = "none";
+}
+
+function enableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = false;
+  submitButton.innerHTML = "Submit";
 }

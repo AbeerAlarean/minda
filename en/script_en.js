@@ -19,14 +19,14 @@ let data_view_LR = null;
   let AudioContext = window.AudioContext || window.webkitAudioContext;
   let context = null;
   let analyser = null;
-  let canvas = document.querySelector('canvas');
+  let canvas = document.querySelector("canvas");
   let canvasCtx = canvas.getContext("2d");
-  let visualSelect = document.querySelector('#visSelect');
-  let micSelect = document.querySelector('#micSelect');
+  let visualSelect = document.querySelector("#visSelect");
+  let micSelect = document.querySelector("#micSelect");
   let stream = null;
   let tested = false;
   let new_sampleRate = 44100;
-  let min_duration = 210;
+  let min_duration = 230;
   let HP_filter = false;
   let delay = 0;
 
@@ -34,14 +34,21 @@ let data_view_LR = null;
   recordButton = document.getElementById("record");
   recordButton.addEventListener("click", start);
 
+  //retryUploading
+  retryUploading = document.getElementById("retry");
+  retryUploading.addEventListener("click", submit);
+
   // stop recording
   stopButton = document.getElementById("stop");
   stopButton.addEventListener("click", stop);
 
   // redo recording
   redoButton = document.getElementById("redo");
-  redoButton.addEventListener("click", redo);
-
+  redoButton.addEventListener("click", function () {
+    if (confirm("Are you sure you want to redo the recording?")) {
+      redo();
+    }
+  });
   // next
   nextButton = document.getElementById("next");
   nextButton.addEventListener("click", next);
@@ -49,30 +56,16 @@ let data_view_LR = null;
   // submit recording
   submitButton = document.getElementById("submit");
   submitButton.addEventListener("click", submit);
-
-  try {
-    window.stream = stream = await getStream();
-    console.log('Got stream');
-  }
-  catch (err) {
-    alert('There is something wrong with your microphone!\n\n Please check your microphone setting.', err);
-    $("#MAIN").addClass("hidden")
-    //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
-    alert('Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Chrome, Firefox, Safari, QQ or WeChat.');
-    location.replace("https://"+window.location.hostname)
-  }
-
   const deviceInfos = await navigator.mediaDevices.enumerateDevices();
 
   var mics = [];
   for (let i = 0; i !== deviceInfos.length; ++i) {
     let deviceInfo = deviceInfos[i];
-    if (deviceInfo.kind === 'audioinput') {
+    if (deviceInfo.kind === "audioinput") {
       mics.push(deviceInfo);
-      let label = deviceInfo.label ||
-        'Microphone ' + mics.length;
-      console.log('Mic ', label + ' ' + deviceInfo.deviceId)
-      const option = document.createElement('option')
+      let label = deviceInfo.label || "Microphone " + mics.length;
+      console.log("Mic ", label + " " + deviceInfo.deviceId);
+      const option = document.createElement("option");
       option.value = deviceInfo.deviceId;
       option.text = label;
       micSelect.appendChild(option);
@@ -85,7 +78,7 @@ let data_view_LR = null;
     }
     return navigator.mediaDevices.getUserMedia(constraints);
   }
-
+  
   function setUpRecording() {
     context = new AudioContext();
     sampleRate = context.sampleRate;
@@ -93,7 +86,7 @@ let data_view_LR = null;
     // creates a gain node
     volume = context.createGain();
 
-    // creates an audio node from teh microphone incoming stream
+    // creates an audio node from the microphone incoming stream
     audioInput = context.createMediaStreamSource(stream);
 
     // Create analyser
@@ -102,14 +95,8 @@ let data_view_LR = null;
     // connect audio input to the analyser
     audioInput.connect(analyser);
 
-    // connect analyser to the volume control
-    // analyser.connect(volume);
-
     let bufferSize = 4096;
     let recorder = context.createScriptProcessor(bufferSize, 2, 2);
-
-    // we connect the volume control to the processor
-    // volume.connect(recorder);
 
     analyser.connect(recorder);
 
@@ -117,7 +104,7 @@ let data_view_LR = null;
     recorder.connect(context.destination);
 
     recorder.onaudioprocess = function (e) {
-      // Check 
+      // Check
       if (!recording) return;
       // Do something with the data, i.e Convert this to WAV
 
@@ -128,49 +115,51 @@ let data_view_LR = null;
         tested = true;
         // if this reduces to 0 we are not getting any sound
         if (!left.reduce((a, b) => a + b)) {
-          alert("There is something wrong with your microphone!\n\nPlease check your microphone setting.");
+          alert(
+            "There is something wrong with your microphone!\n\nPlease check your microphone setting."
+          );
           // clean up;
           // stop();
           stream.getTracks().forEach(function (track) {
             track.stop();
           });
           context.close();
-          $("#MAIN").addClass("hidden")
-          //document.querySelector("h1").innerText = "Your microphone is muted in the browser settings!\nPlease copy the below link and open it with other browsers\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://recording.minda.my";
-          alert('Your microphone is muted in the browser settings!');
-          location.replace("https://"+window.location.hostname)
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Your microphone is muted in the browser settings!\nPlease copy the below link and open it with other browsers\nFirefox, Safari, QQ or WeChat.\n-------------------\n\n https://voiceforhealth.online";
+          alert("Your microphone is muted in the browser settings!");
+          location.replace("https://" + window.location.hostname);
         }
       }
 
       if (HP_filter) {
         // we clone the samples
         leftchannel.push(new Float64Array(left));
-        // rightchannel.push(new Float64Array(right));
         recordingLength += bufferSize;
         dataLength += bufferSize;
-        duration_p = parseInt(dataLength / 48000 / min_duration * 100);
+        duration_p = parseInt((dataLength / 48000 / min_duration) * 100);
 
         document.getElementById("p_bar").style.width = duration_p + "%";
-        document.getElementById("p_percent").innerHTML = duration_p + '%';
+        document.getElementById("p_percent").innerHTML = duration_p + "%";
         delay = 0;
 
         if (duration_p >= 100) {
-          stop()
+          stop();
         }
-      }
-      else {
+      } else {
         if (parseInt(delay / 48000) <= 0.5) {
           left.forEach((elem, i) => {
             left[i] = 0;
-          })
+          });
           leftchannel.push(new Float64Array(left));
           recordingLength += bufferSize;
         }
-        delay += bufferSize
+        delay += bufferSize;
       }
     };
+
     visualize();
-  };
+  }
+
 
   // Visualizer function from
   // https://webaudiodemos.appspot.com/AudioRecorder/index.html
@@ -190,30 +179,27 @@ let data_view_LR = null;
 
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-
-
     var drawAlt = function () {
       drawVisual = requestAnimationFrame(drawAlt);
       analyser.getByteFrequencyData(dataArrayAlt);
-      canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+      canvasCtx.fillStyle = "rgb(0, 0, 0)";
       canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      var barWidth = (WIDTH / bufferLengthAlt);
+      var barWidth = WIDTH / bufferLengthAlt;
       var barHeight;
       var x = 0;
 
       if (Math.abs(dataArrayAlt.reduce((a, b) => a + b)) > 7500) {
         HP_filter = true;
-      }
-      else {
+      } else {
         HP_filter = false;
       }
-
 
       for (var i = 0; i < bufferLengthAlt; i++) {
         barHeight = dataArrayAlt[i];
 
-        canvasCtx.fillStyle = "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
+        canvasCtx.fillStyle =
+          "hsl( " + Math.round((i * 360) / bufferLengthAlt) + ", 100%, 50%)";
         canvasCtx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
         x += barWidth + 1;
       }
@@ -221,42 +207,53 @@ let data_view_LR = null;
     drawAlt();
   }
 
-  function start() {
-    alert(' Attention：\n- Be sure to find a quiet space and turn off the fan/air conditioner.\n- Put your phone on silent mode.\n- The reading script consists of 5 paragraphs. Read it aloud at a normal speed until the progress bar reaches 100%.');
-    setUpRecording();
-    recordButton.disabled = true;
-    recordButton.innerHTML = 'Recording in Progress <i class="fa fa-spinner fa-spin"></i>'
-    // $("#record").addClass("button-animate");
+  async function start() {
+    alert(
+    " Attention：\n- Be sure to find a quiet space and turn off the fan/air conditioner.\n- Put your phone on silent mode.\n- The reading script is designed to provide understanding and a guide to collecting your voice.\n- You can just read it aloud at a normal speed until the progress bar reaches 100%."
+    );
 
-    $("#stop").removeClass("hidden");
-    stopButton.disabled = false;
+    try {
+      // Get the media stream with the selected microphone
+      stream = await getStream({
+        audio: { deviceId: micSelect.value },
+        video: false,
+      });
+      console.log("Got stream with selected microphone");
 
-    $("#analyser").removeClass("hidden");
-    $("#progress").removeClass("hidden");
+      // Update the recording setup with the new stream
+      setUpRecording(stream);
 
-    if (!$("#audio").hasClass("hidden")) {
-      $("#audio").addClass("hidden")
-    };
+      recordButton.disabled = true;
+      recordButton.innerHTML =
+        'Recording in Progress <i class="fa fa-spinner fa-spin"></i>';
+      $("#stop").removeClass("hidden");
+      stopButton.disabled = false;
+      $("#analyser").removeClass("hidden");
+      $("#progress").removeClass("hidden");
+      $("#audio").addClass("hidden");
+      $("#submit").addClass("hidden");
+      $("#redo").addClass("hidden");
+      $("#next").addClass("hidden");
+      $("#transbox_2").addClass("hidden");
 
-    if (!$("#submit").hasClass("hidden")) {
-      $("#submit").addClass("hidden")
-    };
+      const element = document.getElementById("record");
+      element.scrollIntoView(true);
+      recording = true;
 
-    const element = document.getElementById("record");
-    element.scrollIntoView(true);
-    recording = true;
-
-    // reset the buffers for the new recording
-    // leftchannel.length = rightchannel.length = 0;
-    leftchannel.length = 0;
-    recordingLength = 0;
-    if (!context) setUpRecording();
+      leftchannel.length = 0;
+      recordingLength = 0;
+    } catch (error) {
+      console.error("Failed to get stream with selected microphone:", error);
+      // Handle error as per your requirements
+    }
   }
+
 
   function stop() {
     $("#record").addClass("hidden");
     stopButton.disabled = true;
-    stopButton.innerHTML = 'Processing... <i class="fa fa-spinner fa-spin"></i>'
+    stopButton.innerHTML =
+      'Processing... <i class="fa fa-spinner fa-spin"></i>';
     $("#script").addClass("hidden");
     $("#analyser").addClass("hidden");
     $("#progress").addClass("hidden");
@@ -270,33 +267,36 @@ let data_view_LR = null;
       // we interleave both channels together
       // let interleaved = interleave(leftBuffer, rightBuffer);
 
-      data_view_L = exportWAV(leftBuffer, 0.65)
+      data_view_L = exportWAV(leftBuffer, 0.65);
       // data_view_R = exportWAV(rightBuffer, 1)
-      // data_view_LR = exportWAV(interleaved, 1)      
+      // data_view_LR = exportWAV(interleaved, 1)
       // our final binary blob
-      const blob = new Blob([data_view_L], { type: 'audio/wav' });
+      const blob = new Blob([data_view_L], { type: "audio/wav" });
       const audioUrl = URL.createObjectURL(blob);
-      document.querySelector('#audio').setAttribute('src', audioUrl);
+      document.querySelector("#audio").setAttribute("src", audioUrl);
 
-      console.log('Stop')
+      console.log("Stop");
       $("#stop").addClass("hidden");
       $("#audio").removeClass("hidden");
-      stopButton.innerHTML = 'Stop Recording <i class="fas fa-microphone-slash"></i>'
+      stopButton.innerHTML =
+        'Stop Recording <i class="fas fa-microphone-slash"></i>';
       $("#redo").removeClass("hidden");
-      $("#next").removeClass("hidden");      
+      $("#next").removeClass("hidden");
       //$("#transbox_1").addClass("hidden");
       document.getElementById("next").scrollIntoView(true);
     }, 500);
 
     var duration = parseInt(recordingLength / 48000);
     if (duration < min_duration) {
-      alert('Your recording duration too short. Please redo recording.\n\nRead the script aloud at a normal speed until the progress bar reaches 100%.');
+      alert(
+        "Your recording duration too short. Please redo recording.\n\nRead the script aloud at a normal speed until the progress bar reaches 100%."
+      );
       redo();
     }
   }
 
   function redo() {
-    window.location.reload()
+    window.location.reload();
   }
 
   function next() {
@@ -326,11 +326,11 @@ let data_view_LR = null;
     let view = new DataView(buffer);
 
     // RIFF chunk descriptor
-    writeUTFBytes(view, 0, 'RIFF');
+    writeUTFBytes(view, 0, "RIFF");
     view.setUint32(4, 36 + dataBuffer.length * 2, true);
-    writeUTFBytes(view, 8, 'WAVE');
+    writeUTFBytes(view, 8, "WAVE");
     // FMT sub-chunk
-    writeUTFBytes(view, 12, 'fmt ');
+    writeUTFBytes(view, 12, "fmt ");
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true);
     view.setUint16(22, 1, true);
@@ -339,7 +339,7 @@ let data_view_LR = null;
     view.setUint16(32, 2, true);
     view.setUint16(34, 16, true);
     // data sub-chunk
-    writeUTFBytes(view, 36, 'data');
+    writeUTFBytes(view, 36, "data");
     view.setUint32(40, dataBuffer.length * 2, true);
 
     // write the PCM samples
@@ -347,7 +347,7 @@ let data_view_LR = null;
     let index = 44;
     let volume = gain;
     for (let i = 0; i < lng; i++) {
-      view.setInt16(index, dataBuffer[i] * (0x7FFF * volume), true);
+      view.setInt16(index, dataBuffer[i] * (0x7fff * volume), true);
       index += 2;
     }
 
@@ -355,7 +355,7 @@ let data_view_LR = null;
     //   var s = Math.max(-1, Math.min(1, dataBuffer[i]));
     //   view.setInt16(index, s < 0 ? s * 0x8000 : s * (0x7FFF * volume), true);
     // }
-    return view
+    return view;
   }
 
   function interleave(leftChannel, rightChannel) {
@@ -379,102 +379,174 @@ let data_view_LR = null;
   }
 
   function submit() {
-    var name = document.getElementById("name").value.length
-    var email = document.getElementById("email").value.length
-    var mobile = document.getElementById("mobile").value.length
-    var dob = document.getElementById("dob").value.length
+    var name = document.getElementById("name").value.length;
+    var email = document.getElementById("email").value.length;
+    var mobile = document.getElementById("mobile").value.length;
+    var dob = document.getElementById("dob").value.length;
     var male = document.getElementById("male").checked;
     var female = document.getElementById("female").checked;
-    var med_yes = document.getElementById("med_yes").checked
-    var med_no = document.getElementById("med_no").checked
-    var v_email = ValidateEmail(document.getElementById("email").value.trim())
-    var v_mobile = phonenumber(document.getElementById("mobile").value.trim())
-    var v_dob = ValidateDOB(document.getElementById("dob").value.trim())
+    var med_yes = document.getElementById("med_yes").checked;
+    var med_no = document.getElementById("med_no").checked;
+    var v_email = ValidateEmail(document.getElementById("email").value.trim());
+    var v_mobile = phonenumber(document.getElementById("mobile").value.trim());
+    var v_dob = ValidateDOB(document.getElementById("dob").value.trim());
     var duration = parseInt(recordingLength / 48000);
 
-    if (name > 0 && v_email && v_mobile && v_dob && (male || female) && (med_yes || med_no) && duration >= min_duration) {
+    if (
+      name > 0 &&
+      v_email &&
+      v_mobile &&
+      v_dob &&
+      (male || female) &&
+      (med_yes || med_no) &&
+      duration >= min_duration
+    ) {
       submitButton.disabled = true;
-      submitButton.innerHTML = 'Uploading <i class="fa fa-spinner fa-spin"></i>'
+      submitButton.innerHTML =
+        'Uploading <i class="fa fa-spinner fa-spin"></i>';
       $("#redo").addClass("hidden");
       $("#audio").addClass("hidden");
       $("#transbox_2").removeClass("hidden");
 
       var timestamp = new Date();
-      var date = timestamp.toISOString().slice(0, 10).trim()
-      var time = timestamp.toLocaleString("en-US", { hour12: false }, { timeZone: "Asia/Kuala_Lumpur" }).split(",")[1].trim()
-      var name = document.getElementById("name").value
-      var email = document.getElementById("email").value.trim()
-      var mobile = document.getElementById("mobile").value.trim()
-      var dob = document.getElementById("dob").value.replaceAll('/', '-').trim()
-      var gender = ""
-      var medication = ""
-      var referral = "Ser.Brandon"
+      var date = timestamp.toISOString().slice(0, 10).trim();
+      var time = timestamp
+        .toLocaleString(
+          "en-US",
+          { hour12: false },
+          { timeZone: "Asia/Kuala_Lumpur" }
+        )
+        .split(",")[1]
+        .trim();
+      var name = document.getElementById("name").value;
+      var email = document.getElementById("email").value.trim();
+      var mobile = document.getElementById("mobile").value.trim();
+      var dob = document
+        .getElementById("dob")
+        .value.replaceAll("/", "-")
+        .trim();
+      var gender = "";
+      var medication = "";
+      var referral = "Ser.Brandon";
 
       if (male) {
-        gender = "M"
-      }
-      else {
-        gender = "F"
+        gender = "M";
+      } else {
+        gender = "F";
       }
 
       if (med_yes) {
-        medication = "Y"
-      }
-      else {
-        medication = "N"
+        medication = "Y";
+      } else {
+        medication = "N";
       }
 
       var parser = new UAParser();
       // console.log(parser.getResult());
       var browser = Object.values(parser.getResult().browser)[0];
-      var os = Object.values(parser.getResult().os)[0] + " " + Object.values(parser.getResult().os)[1];
+      var os =
+        Object.values(parser.getResult().os)[0] +
+        " " +
+        Object.values(parser.getResult().os)[1];
       var model = Object.values(parser.getResult().device)[0];
       var type = Object.values(parser.getResult().device)[1];
       var vendor = Object.values(parser.getResult().device)[2];
       var cpu = Object.values(parser.getResult().cpu)[0];
 
-      filename = date + "," + time + "," + name + "," + email + "," + mobile + "," + dob + "," + gender + "," + medication + "," + sampleRate + "," + browser + "," + os + "," + model + "," + type + "," + vendor + "," + cpu + "," + referral
-      file_L = new File([data_view_L], filename + ",EN" + '.wav', { type: "audio/wav" });
+      filename =
+        date +
+        "," +
+        time +
+        "," +
+        name +
+        "," +
+        email +
+        "," +
+        mobile +
+        "," +
+        dob +
+        "," +
+        gender +
+        "," +
+        medication +
+        "," +
+        sampleRate +
+        "," +
+        browser +
+        "," +
+        os +
+        "," +
+        model +
+        "," +
+        type +
+        "," +
+        vendor +
+        "," +
+        cpu +
+        "," +
+        referral;
+      file_L = new File([data_view_L], filename + ",EN" + ".wav", {
+        type: "audio/wav",
+      });
 
-      uploadFile(file_L, filename)
+      var data = {
+        date: date,
+        time: time,
+        name: name,
+        email: email,
+        mobile: mobile,
+        dob: dob,
+        gender: gender,
+        medication: medication,
+        sampleRate: sampleRate,
+        browser: browser,
+        os: os,
+        model: model,
+        type: type,
+        vendor: vendor,
+        cpu: cpu,
+        referral: referral,
+      };
+      var jsonData = JSON.stringify(data);
+      uploadFile(file_L, filename + ",EN" + ".wav", jsonData);
 
-      // document.getElementById("name").value = ""
-      // document.getElementById("email").value = ""
-      // document.getElementById("mobile").value = ""
-      // document.getElementById("dob").value = ""
-      // document.getElementById("male").checked = false
-      // document.getElementById("female").checked = false
-      // document.getElementById("med_yes").checked = false
-      // document.getElementById("med_no").checked = false
-    }
+      //dummey data
 
-    else if (duration < min_duration) {
-      alert('Your recording duration too short. Please redo recording.\n\nRead the script aloud at a normal speed until the progress bar reaches 100%.');
+      //  document.getElementById("name").value = "abdul"
+      //  document.getElementById("email").value = "email@server.com"
+      //  document.getElementById("mobile").value = "+601160503498"
+      //  document.getElementById("dob").value = "12/12/1999"
+      //  document.getElementById("male").checked = false
+      //  document.getElementById("female").checked = false
+      //  document.getElementById("med_yes").checked = false
+      //  document.getElementById("med_no").checked = false
+    } else if (duration < min_duration) {
+      alert(
+        "Your recording duration too short. Please redo recording.\n\nRead the script aloud at a normal speed until the progress bar reaches 100%."
+      );
       document.getElementById("record").scrollIntoView(true);
-      redo()
-    }
-    else if (name < 1) {
-      alert('Please provide your name!');
+      redo();
+    } else if (name < 1) {
+      alert("Please provide your name!");
       document.getElementById("name").scrollIntoView(true);
-    }
-    else if (!v_email) {
-      alert('Please check and provide your actual email address to ensure receipt of report.');
+    } else if (!v_email) {
+      alert(
+        "Please check and provide your actual email address to ensure receipt of report."
+      );
       document.getElementById("email").scrollIntoView(true);
-    }
-    else if (!v_mobile) {
-      alert('Please provide real mobile number! (including + country code)\n Example: +XX-XXXXXXXXX');
+    } else if (!v_mobile) {
+      alert(
+        "Please provide real mobile number! (including + country code)\n Example: +XX-XXXXXXXXX"
+      );
       document.getElementById("mobile").scrollIntoView(true);
-    }
-    else if (!v_dob) {
-      alert("Enter your date of birth in DD/MM/YYYY format ONLY.")
+    } else if (!v_dob) {
+      alert("Enter your date of birth in DD/MM/YYYY format ONLY.");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!male && !female) {
-      alert('Please select gender!');
+    } else if (!male && !female) {
+      alert("Please select gender!");
       document.getElementById("dob").scrollIntoView(true);
-    }
-    else if (!med_yes && !med_no) {
-      alert('Please select whether you are taking any medication!');
+    } else if (!med_yes && !med_no) {
+      alert("Please select whether you are taking any medication!");
       document.getElementById("dob").scrollIntoView(true);
     }
   }
@@ -484,8 +556,8 @@ let data_view_LR = null;
     visualize();
   };
 
-  micSelect.onchange = async e => {
-    console.log('now use device ', micSelect.value);
+  micSelect.onchange = async (e) => {
+    console.log("now use device ", micSelect.value);
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
@@ -493,15 +565,16 @@ let data_view_LR = null;
 
     stream = await getStream({
       audio: {
-        deviceId: { exact: micSelect.value }
-      }, video: false
+        deviceId: { exact: micSelect.value },
+      },
+      video: false,
     });
     setUpRecording();
-  }
+  };
 
   function pause() {
     recording = false;
-    context.suspend()
+    context.suspend();
   }
 
   function resume() {
@@ -513,8 +586,7 @@ let data_view_LR = null;
     var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (inputText.match(mailformat)) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -525,17 +597,16 @@ let data_view_LR = null;
     //Check whether valid dd/MM/yyyy Date Format.
     if (regex.test(inputText)) {
       //Test which seperator is used '/' or '-'
-      var opera1 = inputText.split('/');
-      var opera2 = inputText.split('-');
+      var opera1 = inputText.split("/");
+      var opera2 = inputText.split("-");
       lopera1 = opera1.length;
       lopera2 = opera2.length;
 
       // Extract the string into month, date and year
       if (lopera1 > 1) {
-        var pdate = inputText.split('/');
-      }
-      else if (lopera2 > 1) {
-        var pdate = inputText.split('-');
+        var pdate = inputText.split("/");
+      } else if (lopera2 > 1) {
+        var pdate = inputText.split("-");
       }
 
       var dd = parseInt(pdate[0]);
@@ -547,9 +618,7 @@ let data_view_LR = null;
       if (mm == 1 || mm > 2) {
         if (dd > ListofDays[mm - 1]) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
 
       if (mm == 2) {
@@ -558,90 +627,225 @@ let data_view_LR = null;
           lyear = true;
         }
 
-        if ((lyear == false) && (dd >= 29)) {
+        if (lyear == false && dd >= 29) {
           return false;
-        }
-        else if ((lyear == true) && (dd > 29)) {
+        } else if (lyear == true && dd > 29) {
           return false;
-        }
-        else
-          return true
+        } else return true;
       }
-    }
-    else {
+    } else {
       return false;
     }
   }
 
   function phonenumber(inputtxt) {
     if (isValidNumber(inputtxt)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
   // Number will be with country code
   function isValidNumber(number) {
     try {
-      return new libphonenumber.parsePhoneNumber(number).isValid()
+      return new libphonenumber.parsePhoneNumber(number).isValid();
     } catch (error) {
-      return false
+      return false;
     }
   }
-})()
+})();
 
-async function uploadFile(file, fName) {
-  let formData = new FormData();
-  formData.append("file", file);
 
-  try {
-    $.ajax({
-      url: "https://hook.eu1.make.com/8l7hwzifmqw3bb8k353yv8j92nlthkta",
-      method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",EN.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
+
+function uploadFile(file, fName, jsonData) {
+  const formData = new FormData();
+  formData.append("file", file, fName);
+
+  const xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener("progress", (event) => {
+    if (event.lengthComputable) {
+      const progress = Math.round((event.loaded * 100) / event.total);
+      updateProgressBar(progress);
+    }
+  });
+
+  xhr.addEventListener("load", async () => {
+    if (xhr.status === 200) {
+      // Upload successful
+      const jsonResponse = JSON.parse(xhr.responseText);
+      console.log(jsonResponse);
+      handleUploadSuccess(jsonData)
+      updateProgressBar(progress);
+
+    } else {
+      // Upload failed
+      console.error("Failed to upload file.");
+    handleUploadError();
+    }
+  });
+
+  xhr.addEventListener("error", () => {
+    console.error("Upload error.");
+    // Error handling code...
+  });
+
+  xhr.open("POST", "upload.php");
+  xhr.send(formData);
+}
+
+
+function handleUploadSuccess(jsonData) {
+  showAlert(
+    "Your recording has been uploaded successfully.\nWe will contact you as soon as possible.\nThank you! ",
+    "success"
+  );
+
+  // Submit jsonData to another endpoint
+  fetch("https://hook.eu1.make.com/nl5e2s4hwfh807g76y1pabns3oxf9nrp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: jsonData,
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("JSON data submitted successfully.");
+        startCountdown();
+      } else {
+        console.error("Failed to submit JSON data.");
+        hideTransBox();
+      }
+    })
+    .catch((error) => {
+      console.error("Failed to submit JSON data.", error);
     });
 
-    await fetch('upload.php', {
-      method: "POST",
-      body: formData
-    });
-    
-    $.ajax({
-      url: "https://hook.eu1.make.com/vlw96phpwf8146ndgjvabcsi5v8wzxzf",
-      method: "POST",
-      dataType: "json",
-      contentType: false,
-      data: fName + ",EN.wav",
-      processData: false,
-      success: function (data) {
-        alert(data);
-      },
-    });
+  hideLoader(); // Hide loading indicator
+  enableSubmitButton(); // Enable submit button
+}
 
-    alert('Your recording has been uploaded successfully.\nWe will contact you as soon as possible. Thank you!');
+function startCountdown() {
+  let countdownElement = document.getElementById("countdown-timer");
+  let countdownTime = 10; // Countdown time in seconds
 
-    $("#transbox_2").addClass("hidden");
-    $("#record").removeClass("inactive");
-    recordButton.disabled = false;
+  // Display the initial countdown value
+  countdownElement.innerText = countdownTime;
 
-    $("#submit").addClass("hidden");
-    submitButton.disabled = true;
-    submitButton.innerText = "Submit"
+  // Start the countdown interval
+  let countdownInterval = setInterval(() => {
+    countdownTime--;
 
-    setTimeout(function () {
-      location.replace("https://www.voiceforhealth.online/")
-    }, 1000);
-  } catch (error) {
-    alert('Failed to upload your recording.\nPlease make sure you have a stable internet and upload the recording again.')
-    submitButton.disabled = false;
-    submitButton.innerHTML = 'Upload Recording <i class="fas fa-upload"></i>'
-    $("#transbox_2").addClass("hidden");
+    // Update the countdown value
+    countdownElement.innerText = countdownTime;
+
+    // Check if the countdown reaches 0
+    if (countdownTime === 0) {
+      // Redirect to the home page
+      window.location.href = "/";
+
+      // Clear the countdown interval
+      clearInterval(countdownInterval);
+    }
+  }, 1000); // Update the countdown every 1 second
+}
+function handleUploadError() {
+  showTransBox();
+  showAlert(
+    "Failed to upload your recording.\nPlease make sure you have a stable internet connection and try again.",
+    "error"
+  );
+
+  //   enableSubmitButton(); // Enable submit button
+  setTimeout(function () {
+    showRetry();
+    hideTransBox();
+    showRedo();
+    hideSubmitButton();
+  }, 5000);
+}
+
+function updateProgressBar(progress) {
+  const progressBar = document.getElementById("upload-progress");
+  progressBar.style.width = `${progress}%`;
+}
+
+function showAlert(message, type) {
+  const loading = document.getElementById("loading");
+  loading.style.display = "none";
+  console.log("hide wrapper....");
+  const alertBox = document.getElementById("alert-box");
+  alertBox.innerText = message;
+  alertBox.className = `alert-${type}`;
+
+  alertBox.style.display = "block";
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "none";
+}
+
+function enableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = false;
+  submitButton.innerHTML = 'Upload Recording <i class="fas fa-upload"></i>';
+}
+
+function handleUploadProgress(event) {
+  if (event.lengthComputable) {
+    const percentComplete = (event.loaded / event.total) * 100;
+    updateProgressBar(percentComplete);
   }
+}
+function showTransBox() {
+  const transBox2 = document.getElementById("transbox_2");
+  transBox2.style.display = "block";
+}
+
+function hideTransBox() {
+  const transBox2 = document.getElementById("transbox_2");
+  transBox2.style.display = "none";
+}
+
+function hideAlert() {
+  const alertBox = document.getElementById("alert-box");
+  alertBox.style.display = "none";
+  alertBox.classList.remove("success", "error");
+}
+
+function showLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "block";
+}
+function showRetry() {
+  const retry = document.getElementById("retry");
+  $("#retry").removeClass("hidden");
+}
+function showRedo() {
+  const redo = document.getElementById("redo");
+  $("#redo").removeClass("hidden");
+}
+
+function hideLoader() {
+  const loader = document.getElementById("loader");
+  loader.style.display = "none";
+}
+
+function disableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = true;
+  submitButton.innerHTML = 'Uploading <i class="fa fa-spinner fa-spin"></i>';
+}
+function hideSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.style.display = "none";
+}
+
+function enableSubmitButton() {
+  const submitButton = document.getElementById("submit");
+  submitButton.disabled = false;
+  submitButton.innerHTML = "Submit";
 }

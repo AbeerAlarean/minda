@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://apis.google.com/js/api.js"></script>
+    <title>Voice For health</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link
+      href="https://www.jqueryscript.net/css/jquerysctipttop.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="en/en.css" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+      integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/css/intlTelInput.css"
+      rel="stylesheet"
+      media="screen"
+    />
+    <script src="en/flag.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.9/js/intlTelInput.js"></script>
+  </head>
+
+  <body onload="fnBrowserDetect()">
+    <h1></h1>
+    <div id="MAIN">
+      <!--<h1>Voice for Health</h1>-->
+      <div class="logo-container">
+        <a href="index.html">
+          <img
+            class="logo"
+            src="./assets/green-576w.png"
+            alt="Voice For Health Logo"
+          />
+        </a>
+      </div>
+      <p class="lead">
+        Discover your inner health and beyond with the sound of your voice.<br />Prevention
+        is better than cure.
+      </p>
+
+      <div id="recorder-instructions" class="recorder-instructions">
+        <p1>Instructions</p1>
+        <div class="text-container">
+          <div class="short-version">
+            <div class="step-1A">
+              <p>
+                1. Find a quiet space, turn off the fan/AC, and put your phone
+                on silent mode.
+              </p>
+            </div>
+            <div class="step-2A">
+              <p>
+                2. Use your phone's microphone, ensure stable internet and read
+                the script aloud.
+              </p>
+            </div>
+            <div class="step-2A">
+              <p>3. Review and confirm your recording before proceeding.</p>
+            </div>
+
+            <div class="step-3A">
+              <p>4. Fill in the personal profile accurately.</p>
+            </div>
+
+            <div class="step-4A">
+              <p>
+                5.Click "Upload Recording" and wait for the confirmation
+                message. Please expect a response from us within 48 hours.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="full-version hidden">
+          <div class="step-1A">
+            <h4>Step 1 - Find a Quiet Space</h4>
+            <p>
+              - Be sure to turn off the fan/air conditioner, otherwise it will
+              affect the test results.
+            </p>
+            <p>- Put your phone on silent mode.</p>
+          </div>
+
+          <div class="step-2A">
+            <h4>Step 2 - Preparation Before Recording.</h4>
+            <p>
+              - Please use the phone's microphone to record your voice, instead
+              of using headphone! ! !
+            </p>
+            <p>
+              - Only click "Start Recording" when you have a stable internet.
+            </p>
+          </div>
+
+          <div class="step-3A">
+            <h4>Step 3 - Click "Start Recording"</h4>
+            <p>
+              - Hold your phone at a comfortable position and put your mouth
+              close to the microphone.
+            </p>
+            <p>
+              - Read the reading script below aloud at your normal speaking rate
+              until the progress bar reaches 100%.
+            </p>
+          </div>
+
+          <div class="step-4A">
+            <h4>Step 4 - Click "Stop/Redo Recording"</h4>
+            <p>
+              - You can click "Stop Recording" if you would to cancel the
+              recording.
+            </p>
+            <p>
+              - You can check the recording through the player. If you are not
+              satisfied, you can click "Redo Recording".
+            </p>
+            <p>- After confirming the recording, click "Next".</p>
+          </div>
+
+          <div class="step-5A">
+            <h4>Step 5 - Fill in Personal Profile</h4>
+            <p>
+              - Please provide true and complete information, otherwise it will
+              affect us to provide your physical and mental health report.
+            </p>
+          </div>
+
+          <div class="step-6A">
+            <h4>Step 6 - Click "Upload Recording"</h4>
+            <p>
+              - After filling the personal profile, click "Upload Recording".
+            </p>
+            <p>
+              - The upload time depends on the internet speed, generally it
+              takes 1-2 minutes.
+            </p>
+            <p>
+              - When "Your recording has been uploaded successfully. Thank you!"
+              pop up, it means it's done.
+            </p>
+            <p style="text-decoration-line: underline">
+              - We will contact you within 48 hours.
+            </p>
+          </div>
+        </div>
+
+        <button onclick="scrollToSection()" class="read-more-button">
+          Read More
+        </button>
+      </div>
+
+      <div class="mic">
+        <select id="micSelect"></select>
+        <select id="visSelect" class="hidden">
+          <option value="frequencybars">Bar</option>
+          <option value="sinewave">Wave</option>
+          <option value="circle">Circle</option>
+        </select>
+      </div>
+
+      <div id="main-block" class="hidden">
+        <h4>Personal Profile</h4>
+        <form action="index.html" name="google-sheet">
+          <hr />
+          <label id="icon" for="name"><i class="fas fa-user"></i></label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Name"
+            required
+          />
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-envelope"></i></label>
+          <input
+            type="text"
+            name="email"
+            id="email"
+            placeholder="Email"
+            required
+          />
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-phone"></i></label>
+          <input type="tel" name="mobile" id="mobile" required />
+
+          <br />
+          <label id="icon" for="name"><i class="fas fa-calendar"></i></label>
+          <input
+            type="text"
+            name="dob"
+            id="dob"
+            placeholder="Date of Birth (DD/MM/YYYY)"
+            required
+          />
+
+          <div class="sex">
+            <label id="icon" for="name"
+              ><i class="fas fa-venus-mars"></i
+            ></label>
+            <input type="radio" value="Male" id="male" name="gender" />
+            <label for="male" class="radio">Male</label>
+            <input type="radio" value="Female" id="female" name="gender" />
+            <label for="female" class="radio">Female</label>
+          </div>
+
+          <label id="icon" for="name"><i class="fas fa-pills"></i></label>
+          Currently taking western medicine?
+          <br />
+          <div class="medicine">
+            <input type="radio" value="Yes" id="med_yes" name="med" />
+            <label for="med_yes" class="radio">Yes </label>
+            <input type="radio" value="No" id="med_no" name="med" />
+            <label for="med_no" class="radio"> No</label>
+          </div>
+          <br />
+
+          <label id="icon" for="name"><i class="fas fa-id-card"></i></label>
+          <input
+            type="text"
+            name="referral"
+            id="referral"
+            placeholder="Insert associate code (if any)"
+            required
+          />
+          <br />
+          <hr />
+        </form>
+      </div>
+
+      <div class="audio-controls">
+        <button id="submit" class="hidden">
+          Upload Recording <i class="fas fa-upload"></i>
+        </button>
+        <button id="next" class="hidden">
+          Next <i class="fas fa-caret-square-right"></i>
+        </button>
+        <button id="retry" class="hidden">
+          retry uploading <i class="fa fa-rotate-right"></i>
+        </button>
+      </div>
+
+      <div class="audio-controls">
+        <button id="record">
+          Start Recording <i class="fas fa-microphone"></i>
+        </button>
+        <button id="stop" class="hidden">
+          Stop Recording <i class="fas fa-microphone-slash"></i>
+        </button>
+        <button id="redo" class="hidden">
+          Redo Recording <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+      <div id="viz">
+        <canvas id="analyser" width="1024" height="200" class="hidden"></canvas>
+      </div>
+
+      <div id="progress" class="hidden">
+        <div id="p_bar" class="bar" style="width: 0%">
+          <p id="p_percent" class="percent">0%</p>
+        </div>
+      </div>
+
+      <div class="audio-playback">
+        <audio id="audio" controls class="hidden"></audio>
+      </div>
+
+      <div id="script">
+        <div class="reading-script">
+          <h4>Reading Script</h4>
+          <br /><br />
+          <div class="step-1A">
+            The human voice is an incredible thing. It sets us apart from other
+            creatures on this planet. It is the way we connect with each other,
+            convey emotions and ideas, and make sense of the world around us.
+            <br /><br />
+            At Voice for Health, we are passionate about the power of the human
+            voice, not just for communication, but also for detecting early
+            signs of health conditions. Through our Vocal Biomarker services, we
+            are able to analyze voice patterns and detect subtle changes that
+            may indicate the onset of a wide range of health conditions. Through
+            your voice input, we are able to generate a Preventative Health
+            Report.
+            <br /><br />
+            Imagine being able to detect the early signs of respiratory
+            diseases, cardiovascular disorders, or even neurological conditions,
+            just by analyzing the sound of your voice. We are using the power of
+            AI and machine learning to analyze voice data and detect early
+            warning signs of health conditions, enabling healthcare
+            professionals to diagnose and treat clients sooner, and ultimately
+            improving the quality of lives.
+            <br /><br />
+            But that is not all. We are also exploring the ways in which the
+            human voice can be used to promote mental health and well-being. Our
+            voice analysis technology can detect subtle changes in a person's
+            voice that may indicate changes in mood, stress levels, or even
+            cognitive function. By analyzing these voice patterns, we can help
+            people better understand their own mental health and take proactive
+            steps toward improved well-being.
+            <br /><br />
+            For example, imagine being able to use your voice to detect early
+            signs of depression or anxiety, and to take steps to manage those
+            conditions before they become more serious. Or imagine being able to
+            use your voice to improve your focus and concentration, and to
+            enhance your overall cognitive performance.
+            <br /><br />
+            At Voice for Health, we are committed to exploring how the human
+            voice can be used to promote health and well-being and unlock the
+            secrets of human health for the benefit of all.
+            <br /><br />
+            So, if you are interested in participating in our voice analysis, we
+            invite you to join us on this journey of discovery. By providing
+            your voice, you will be enabling yourself to build a better
+            understanding of the connections between voice and health, and you
+            will be taking a proactive step toward better health and well-being
+            for yourself.
+            <br /><br />
+            In conclusion, let us celebrate the wonders of the human voice, and
+            let us continue to explore the many ways in which it can be used to
+            promote health and well-being. Thank you for considering Voice for
+            Health, and we look forward to working with you to unlock the power
+            of your voice.
+            <br /><br /><br /><br />
+            * Repeat reading if necessary until the progress bar reaches 100%
+          </div>
+        </div>
+      </div>
+
+      <svg class="arrow">
+        <path id="a1" d="M0 0 L15 22 L30 0"></path>
+      </svg>
+
+      <!--<div id="transbox_1" class="hidden">
+      <div class="wrapper">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <span>Processing...</span>
+      </div>
+    </div>-->
+    </div>
+
+    <div id="transbox_2" class="hidden">
+      <!-- Add a progress bar element -->
+      <div id="upload-progress-container">
+        <div id="upload-progress"></div>
+        
+      </div>
+
+
+
+      <!-- Add a loader element -->
+      <div id="loader"></div>
+
+        <div id="alert-box"></div>
+      <div id="loading" class="wrapper">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <div class="shadow"></div>
+        <span class="uploading" id="uploading">Uploading...</span>
+        <div id="countdown-timer"></div>
+
+      </div>
+    </div>
+
+    <script>
+      const readMoreButton = document.querySelector(".read-more-button");
+      const shortVersion = document.querySelector(".short-version");
+      const fullVersion = document.querySelector(".full-version");
+
+      readMoreButton.addEventListener("click", () => {
+        if (shortVersion.classList.contains("hidden")) {
+          // "Read More" was clicked
+          readMoreButton.textContent = "Read More";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        } else {
+          // "Read Less" was clicked
+          readMoreButton.textContent = "Read Less";
+          shortVersion.classList.toggle("hidden");
+          fullVersion.classList.toggle("hidden");
+          scrollToSection();
+        }
+      });
+
+      function scrollToSection() {
+        var section = document.getElementById("recorder-instructions");
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      document.addEventListener("scroll", handleScroll);
+      var rootElement = document.documentElement;
+
+      // function otherReferral() {
+      //   var referralOption = document.getElementById("referral").value;
+
+      //   if (referralOption == "Other") {
+      //     $("#oth_referral").removeClass("hidden");
+      //   }
+      //   else {
+      //     $("#oth_referral").addClass("hidden");
+      //   }
+      // }
+
+      function handleScroll() {
+        // Do something on scroll
+        var scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+        if (rootElement.scrollTop / scrollTotal > 0.95) {
+          // Show button
+          document.getElementById("a1").classList.add("hidden");
+        } else if (rootElement.scrollTop / scrollTotal < 0.9) {
+          // Hide button
+          document.getElementById("a1").classList.remove("hidden");
+        }
+      }
+
+      function fnBrowserDetect() {
+        var parser = new UAParser();
+        var browserName = Object.values(
+          parser.getResult().browser
+        )[0].toLowerCase();
+        var os = Object.values(parser.getResult().os)[0].toLowerCase();
+        var ver = Object.values(parser.getResult().os)[1].toLowerCase();
+
+        //document.querySelector("h1").innerText = browserName;
+
+        /*if ((browserName.match(/edge/i))||(browserName.match(/chrome/i))||(browserName.match(/webview/i))) {        
+        $("#MAIN").addClass("hidden")
+        //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+        alert('Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.')
+        location.replace("https://"+window.location.hostname)
+      }*/
+
+        if (browserName.match(/webview/i)) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Firefox, Safari, QQ or WeChat.";
+          alert(
+            "Sorry, your browser is not supported!\n For the best experience, please use any of these supported browsers:\n Chrome, Firefox, Safari, QQ or WeChat."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        if (os.match(/android/i) && parseInt(ver) < 10) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above.";
+          alert(
+            "Sorry, your Android version is not supported!\n Currently the system supports Android versions 10.0 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        if (os.match(/mac os/i) && parseInt(ver) < 10) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above.";
+          alert(
+            "Sorry, your Mac OS version is not supported!\n Currently the system supports Mac OS versions 10 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        if (os.match(/ios/i) && parseInt(ver) < 14) {
+          $("#MAIN").addClass("hidden");
+          //document.querySelector("h1").innerText = "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above.";
+          alert(
+            "Sorry, your iOS version is not supported!\n Currently the system supports iOS versions 14 and above."
+          );
+          location.replace("https://" + window.location.hostname);
+        }
+
+        //Get/Set associate code
+        let a_code = getCookie("assoc_code");
+        const url = window.location.href;
+        console.log(url);
+        console.log(a_code);
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has("rf")) {
+          const rf = urlParams.get("rf");
+          console.log(rf);
+          setCookie("assoc_code", rf, 365);
+          document.getElementById("referral").value = rf;
+          document.getElementById("referral").readOnly = true;
+          console.log("1");
+        } else if (a_code != "") {
+          setCookie("assoc_code", a_code, 365);
+          document.getElementById("referral").value = a_code;
+          document.getElementById("referral").readOnly = true;
+          console.log("2");
+        } else {
+          console.log("3");
+        }
+      }
+
+      function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+      function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(";");
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == " ") {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+    </script>
+
+    <script src="./en/mobile_script.js"></script>
+    <script src="./en/en.js"></script>
+    <script src="./en/wave-resampler.js"></script>
+    <script src="./en/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
+    <script src="https://unpkg.com/libphonenumber-js/bundle/libphonenumber-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/UAParser.js/0.7.20/ua-parser.min.js"></script>
+  </body>
+</html>

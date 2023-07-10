@@ -1,0 +1,131 @@
+[17-Apr-2023 08:16:43 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(41): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:20:38 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(41): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:21:35 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(41): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:23:35 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(41): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:31:32 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(42): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:46:00 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(42): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:47:37 UTC] PHP Warning:  file_get_contents(/rec.json): failed to open stream: No such file or directory in /home/cba5mr8ymxjb/public_html/upload.php on line 38
+[17-Apr-2023 08:50:00 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(42): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:51:24 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: json key is missing the client_email field in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php:129
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/upload.php(42): Google\Auth\Credentials\ServiceAccountCredentials->__construct(Array, Array)
+#1 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/Credentials/ServiceAccountCredentials.php on line 129
+[17-Apr-2023 08:55:22 UTC] PHP Warning:  file_get_contents(/home/cba5mr8ymxjb/public_htmlrec.json): failed to open stream: No such file or directory in /home/cba5mr8ymxjb/public_html/upload.php on line 38
+[17-Apr-2023 09:08:13 UTC] PHP Fatal error:  Uncaught DomainException: Unable to read the credential file specified by  GOOGLE_APPLICATION_CREDENTIALS: file /home/cba5mr8ymxjb/public_html/service-account.json does not exist in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/CredentialsLoader.php:80
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/ApplicationDefaultCredentials.php(160): Google\Auth\CredentialsLoader::fromEnv()
+#1 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Client.php(1247): Google\Auth\ApplicationDefaultCredentials::getCredentials(NULL, NULL, Array, Object(Google\Auth\Cache\MemoryCacheItemPool), NULL)
+#2 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Client.php(434): Google\Client->createApplicationDefaultCredentials()
+#3 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Client.php(914): Google\Client->authorize()
+#4 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Service/Resource.php(238): Google\Client->execute(Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\. in /home/cba5mr8ymxjb/public_html/vendor/google/auth/src/CredentialsLoader.php on line 80
+[17-Apr-2023 09:08:49 UTC] PHP Fatal error:  Uncaught Google\Service\Exception: {
+  "error": {
+    "code": 401,
+    "message": "Request is missing required authentication credential. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.",
+    "errors": [
+      {
+        "message": "Login Required.",
+        "domain": "global",
+        "reason": "required",
+        "location": "Authorization",
+        "locationType": "header"
+      }
+    ],
+    "status": "UNAUTHENTICATED",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+        "reason": "CREDENTIALS_MISSING",
+        "domain": "googleapis.com",
+        "metadata": {
+          "service": "drive.googleapis.com",
+          "method": "google.apps.drive.v3.DriveFiles.Create"
+        }
+      }
+    ]
+  }
+}
+ in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php:134
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/RES in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php on line 134
+[17-Apr-2023 09:11:57 UTC] PHP Fatal error:  Uncaught Error: Class 'Google\Client' not found in /home/cba5mr8ymxjb/public_html/upload.php:31
+Stack trace:
+#0 {main}
+  thrown in /home/cba5mr8ymxjb/public_html/upload.php on line 31
+[17-Apr-2023 09:12:50 UTC] PHP Fatal error:  Uncaught Google\Service\Exception: {
+  "error": {
+    "code": 404,
+    "message": "File not found: 1iVUO0b_SmdaZ_qG8iYU2x3IXa2d6u-Br.",
+    "errors": [
+      {
+        "message": "File not found: 1iVUO0b_SmdaZ_qG8iYU2x3IXa2d6u-Br.",
+        "domain": "global",
+        "reason": "notFound",
+        "location": "fileId",
+        "locationType": "parameter"
+      }
+    ]
+  }
+}
+ in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php:134
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php(107): Google\Http\REST::decodeHttpResponse(Object(GuzzleHttp\Psr7\Response), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#1 [internal function]: Google\Http\REST::doExecute(Object(GuzzleHttp\Client), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#2 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Task/Runner.php(187): call_user_func_array(Array, Array)
+#3 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php(66): Google\ in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php on line 134
+[17-Apr-2023 09:14:56 UTC] PHP Fatal error:  Uncaught Google\Service\Exception: {
+  "error": {
+    "code": 404,
+    "message": "File not found: 1iVUO0b_SmdaZ_qG8iYU2x3IXa2d6u-Br.",
+    "errors": [
+      {
+        "message": "File not found: 1iVUO0b_SmdaZ_qG8iYU2x3IXa2d6u-Br.",
+        "domain": "global",
+        "reason": "notFound",
+        "location": "fileId",
+        "locationType": "parameter"
+      }
+    ]
+  }
+}
+ in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php:134
+Stack trace:
+#0 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php(107): Google\Http\REST::decodeHttpResponse(Object(GuzzleHttp\Psr7\Response), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#1 [internal function]: Google\Http\REST::doExecute(Object(GuzzleHttp\Client), Object(GuzzleHttp\Psr7\Request), 'Google\\Service\\...')
+#2 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Task/Runner.php(187): call_user_func_array(Array, Array)
+#3 /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php(66): Google\ in /home/cba5mr8ymxjb/public_html/vendor/google/apiclient/src/Http/REST.php on line 134
+[17-Apr-2023 09:20:43 UTC] PHP Parse error:  syntax error, unexpected '__DIR__' (T_DIR) in /home/cba5mr8ymxjb/public_html/upload.php on line 1
+[17-Apr-2023 09:20:49 UTC] PHP Parse error:  syntax error, unexpected '__DIR__' (T_DIR) in /home/cba5mr8ymxjb/public_html/upload.php on line 1
+[17-Apr-2023 09:21:10 UTC] PHP Parse error:  syntax error, unexpected '__DIR__' (T_DIR) in /home/cba5mr8ymxjb/public_html/upload.php on line 1
+[01-Jul-2023 03:56:21 UTC] PHP Notice:  Undefined index: file in /home/cba5mr8ymxjb/public_html/upload.php on line 14
+[01-Jul-2023 03:56:21 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/cba5mr8ymxjb/public_html/upload.php on line 19
+[01-Jul-2023 03:56:21 UTC] PHP Notice:  Trying to access array offset on value of type null in /home/cba5mr8ymxjb/public_html/upload.php on line 19
